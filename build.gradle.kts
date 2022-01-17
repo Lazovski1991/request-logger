@@ -36,6 +36,10 @@ val bootJar: BootJar by tasks
 bootJar.enabled = false
 jar.enabled = true
 
+java {
+    withSourcesJar()
+}
+
 publishing {
     publications {
         create<MavenPublication>("maven") {

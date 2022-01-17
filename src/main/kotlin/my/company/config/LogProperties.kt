@@ -6,4 +6,6 @@ import org.springframework.boot.context.properties.ConfigurationProperties
 data class LogProperties (
      var urlExclude: MutableList<String> = mutableListOf(),//todo сделать чтоб и со звездочками урл можно было
      var enable: Boolean = false
+
+//todo отдельно выключать логи на запросы, ответы, ошибки, длину стектрейса, заголовок с токеном,
 )
