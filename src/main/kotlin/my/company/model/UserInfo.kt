@@ -1,6 +1,6 @@
 package my.company.model
 
 data class UserInfo(
-    var email: String,
-    var userName: String
+    var email: String = "unknown",
+    var userName: String = "unknown"
 )

@@ -10,6 +10,7 @@ data class LogResponse(
     val headers: MutableList<String>,
     val userInfo: UserInfo,
     val profile: String,
+    val podIp: String,
     val time: LocalDateTime = LocalDateTime.now(),
     val body: String
 )

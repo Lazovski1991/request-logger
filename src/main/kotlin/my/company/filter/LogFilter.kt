@@ -3,9 +3,10 @@ package my.company.filter
 import my.company.config.LogProperties
 import my.company.model.LogRequest
 import my.company.model.UserInfo
+import my.company.service.FormatService
 import org.slf4j.MDC
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
+import org.springframework.http.HttpHeaders
 import org.springframework.http.MediaType
 import org.springframework.web.filter.OncePerRequestFilter
 import org.springframework.web.util.ContentCachingRequestWrapper
@@ -16,17 +17,19 @@ import javax.servlet.FilterChain
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 
-class LogFilter @Autowired constructor(private val logProperties: LogProperties) : OncePerRequestFilter() {
+class LogFilter constructor(
+    private val logProperties: LogProperties,
+    private val formatService: FormatService
+) : OncePerRequestFilter() {
     companion object {
         const val REQUEST_ID_HEADER: String = "Request-Id"
-        const val DEVICE_ID_HEADER: String = "Device-Id"
         const val TOKEN_HEADER: String = "AuthorizationToken"
         const val REQUEST_ID_MDC: String = "RequestId"
-
+        const val DEVICE_ID_HEADER: String = "Device-Id"
     }
 
-    @Value("\${spring.profiles.active:unknown}")
-    private val profile: String? = null
+    @Value("\${spring.profiles.active}")
+    private val profile: String = "unknown"
 
     override fun doFilterInternal(
         request: HttpServletRequest,
@@ -41,13 +44,10 @@ class LogFilter @Autowired constructor(private val logProperties: LogProperties)
         val wrappedRequest = ContentCachingRequestWrapper(request)
         filterChain.doFilter(wrappedRequest, response)
 
-
-
         if (isPayload(request) && request !is ContentCachingResponseWrapper) {
-            createRequestModel(wrappedRequest)
-//            logger.info("${wrappedRequest.method} $logRequestBody")
+            val logRequestModel = createRequestModel(wrappedRequest)
+            logger.info(formatService.logRequestWithPayload(logRequestModel))
         }
-
     }
 
     private fun createRequestModel(request: ContentCachingRequestWrapper): LogRequest {
@@ -57,28 +57,26 @@ class LogFilter @Autowired constructor(private val logProperties: LogProperties)
         }
         MDC.put(REQUEST_ID_MDC, requestId)
 
-        val userInfo = UserInfo("unknown", "unknown")
+        val userInfo = UserInfo()
         if (request.getHeader(TOKEN_HEADER) != null) {
             //todo распарсить токен и взять что нужно
         }
-        val profile = profile
 
-        val logRequest = LogRequest(
+        return LogRequest(
             requestId,
             request.method,
             request.requestURI,
+            request.getHeader(HttpHeaders.USER_AGENT),
+            request.getHeader(DEVICE_ID_HEADER) ?: "unknown",
+            request.getHeader(TOKEN_HEADER) ?: "unknown",
             getHeaders(request),
             getParam(request),
             userInfo,
-            profile,//профиль чет пока не работает(
+            request.remoteAddr,
+            profile,
             body = getRequestBody(request)
         )
-
-        logger.info(logRequest)
-
-        return logRequest
     }
-
 
     private fun isPayload(request: HttpServletRequest): Boolean {
         val contentType = request.contentType
