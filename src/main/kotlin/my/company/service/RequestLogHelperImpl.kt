@@ -19,11 +19,11 @@ import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.Part
 
 @Service
-class RequestHelperImpl @Autowired constructor(
+class RequestLogHelperImpl @Autowired constructor(
     val logProperties: LogProperties,
     val jwtParse: ParseTokenUtilService,
     val formatService: FormatService
-) : RequestHelperService {
+) : RequestLogHelper {
 
     @Value("\${spring.profiles.active}")
     private val profile: String = "unknown"

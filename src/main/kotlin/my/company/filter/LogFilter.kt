@@ -1,7 +1,7 @@
 package my.company.filter
 
 import my.company.config.LogProperties
-import my.company.service.RequestHelperService
+import my.company.service.RequestLogHelper
 import org.springframework.web.filter.OncePerRequestFilter
 import org.springframework.web.util.ContentCachingRequestWrapper
 import javax.servlet.FilterChain
@@ -10,7 +10,7 @@ import javax.servlet.http.HttpServletResponse
 
 class LogFilter constructor(
     private val logProperties: LogProperties,
-    private val requestHelperService: RequestHelperService
+    private val requestLogHelper: RequestLogHelper
 ) : OncePerRequestFilter() {
 
     override fun doFilterInternal(
@@ -24,6 +24,7 @@ class LogFilter constructor(
         }
         val wrappedRequest = ContentCachingRequestWrapper(request)
         filterChain.doFilter(wrappedRequest, response)
-        requestHelperService.logRequest(wrappedRequest)
+        requestLogHelper.logRequest(wrappedRequest)
+
     }
 }

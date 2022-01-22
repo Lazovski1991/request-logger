@@ -2,6 +2,6 @@ package my.company.service
 
 import org.springframework.web.util.ContentCachingRequestWrapper
 
-interface RequestHelperService {
+interface RequestLogHelper {
     fun logRequest(request: ContentCachingRequestWrapper)
 }

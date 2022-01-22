@@ -1,7 +1,7 @@
 package my.company.config
 
 import my.company.filter.LogFilter
-import my.company.service.RequestHelperService
+import my.company.service.RequestLogHelper
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
@@ -19,7 +19,7 @@ class LogAutoConfig {
     @Bean
     fun createLogFilter(
         @Autowired logProperties: LogProperties,
-        @Autowired requestHelperService: RequestHelperService
+        @Autowired requestLogHelper: RequestLogHelper
     ): LogFilter =
-        LogFilter(logProperties, requestHelperService)
+        LogFilter(logProperties, requestLogHelper)
 }
