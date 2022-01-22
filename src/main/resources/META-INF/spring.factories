@@ -1,1 +1,2 @@
-org.springframework.boot.autoconfigure.EnableAutoConfiguration=my.company.config.LogAutoConfig
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+  my.company.config.LogAutoConfig

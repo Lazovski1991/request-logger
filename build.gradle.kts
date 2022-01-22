@@ -6,7 +6,7 @@ plugins {
     kotlin("plugin.spring") version "1.4.32"
     id("org.springframework.boot") version "2.5.8"
     id("io.spring.dependency-management") version "1.0.11.RELEASE"
-    id ("maven-publish")
+    id("maven-publish")
 }
 
 group = "my.company"
@@ -14,13 +14,14 @@ version = "1.0.0"
 
 repositories {
     mavenCentral()
+    maven(url = "https://jitpack.io")
 }
 
 dependencies {
-    implementation(kotlin("stdlib"))
-    implementation("org.springframework.boot:spring-boot-starter-web:2.5.8")
-    kapt("org.springframework.boot:spring-boot-configuration-processor")
-    implementation("io.github.microutils:kotlin-logging:2.1.21")
+    implementation("org.jetbrains.kotlin:kotlin-stdlib:1.6.0")
+    implementation("org.springframework.boot:spring-boot-starter-web:2.6.2")
+    kapt("org.springframework.boot:spring-boot-configuration-processor:2.6.2")
+    api("com.github.Lazovski1991:jwt-parse-lib:1.0.0-T")
 }
 
 tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
