@@ -4,6 +4,12 @@ import my.company.config.LogProperties
 import my.company.jwtparselib.service.ParseTokenUtilService
 import my.company.model.LogRequest
 import my.company.model.UserInfo
+import my.company.util.Constants.DEVICE_ID_HEADER
+import my.company.util.Constants.PROFILE_MDC
+import my.company.util.Constants.REQUEST_ID_HEADER
+import my.company.util.Constants.REQUEST_ID_MDC
+import my.company.util.Constants.USER_EMAIL_MDC
+import my.company.util.Constants.USER_USERNAME_MDC
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.slf4j.MDC
@@ -29,11 +35,7 @@ class RequestLogHelperImpl @Autowired constructor(
     private val profile: String = "unknown"
 
     companion object {
-        val logger: Logger = LoggerFactory.getLogger(" package.ClassName ")
-
-        const val REQUEST_ID_HEADER: String = "Request-Id"
-        const val DEVICE_ID_HEADER: String = "Device-Id"
-        const val REQUEST_ID_MDC: String = "RequestId"
+        val logger: Logger = LoggerFactory.getLogger(RequestLogHelperImpl::class.java)
     }
 
     override fun logRequest(request: ContentCachingRequestWrapper) {
@@ -42,6 +44,7 @@ class RequestLogHelperImpl @Autowired constructor(
             requestId = UUID.randomUUID().toString()
         }
         MDC.put(REQUEST_ID_MDC, requestId)
+        MDC.put(PROFILE_MDC, profile)
 
         val token = request.getHeader(logProperties.tokenHeaderName)
 
@@ -49,6 +52,8 @@ class RequestLogHelperImpl @Autowired constructor(
         if (token != null) {
             userInfo.email = jwtParse.getValueFieldFromToken(token, "email")
             userInfo.userName = jwtParse.getValueFieldFromToken(token, "username")
+            MDC.put(USER_EMAIL_MDC, userInfo.email)
+            MDC.put(USER_USERNAME_MDC, userInfo.userName)
         }
 
         val logRequest = LogRequest(

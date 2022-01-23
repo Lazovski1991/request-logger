@@ -7,7 +7,7 @@ data class LogError(
     val method: String,
     val status: String,
     val uri: String,
-    val headers: MutableList<String>,
+    val headers: List<MutableMap<String, List<String>>>,
     val userInfo: UserInfo,
     val profile: String,
     val podIp: String,

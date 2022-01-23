@@ -1,13 +1,16 @@
 package my.company.service
 
+import my.company.model.LogError
 import my.company.model.LogRequest
+import my.company.model.LogResponse
 import org.springframework.stereotype.Service
 
 @Service
-class FormatServiceImpl: FormatService {
-    override fun formatRequest(logRequest: LogRequest):String {
+class FormatServiceImpl : FormatService {
+    override fun formatRequest(logRequest: LogRequest): String {
         val stringBuilder = StringBuilder()
         stringBuilder.append("\n------------------------------\n")
+        stringBuilder.append("REQUEST!!!!!\n")
         stringBuilder.append("REQUEST-ID: ${logRequest.requestId}\n")
         stringBuilder.append("METHOD: ${logRequest.method}\n")
         stringBuilder.append("URI: ${logRequest.uri}\n")
@@ -24,5 +27,25 @@ class FormatServiceImpl: FormatService {
         stringBuilder.append("BODY: \n${logRequest.body}")
         stringBuilder.append("\n------------------------------\n")
         return stringBuilder.toString()
+    }
+
+    override fun formatResponse(logResponse: LogResponse): String {
+        val stringBuilder = StringBuilder()
+        stringBuilder.append("\n------------------------------\n")
+        stringBuilder.append("RESPONSE!!!!!\n")
+        stringBuilder.append("REQUEST-ID: ${logResponse.requestId}\n")
+        stringBuilder.append("METHOD: ${logResponse.method}\n")
+        stringBuilder.append("URI: ${logResponse.uri}\n")
+        stringBuilder.append("HEADERS: ${logResponse.headers}\n")
+        stringBuilder.append("USER: email=${logResponse.userInfo.email}, username=${logResponse.userInfo.userName}\n")
+        stringBuilder.append("PROFILE: ${logResponse.profile}\n")
+        stringBuilder.append("TIME: ${logResponse.time}\n")
+        stringBuilder.append("BODY: ${logResponse.body}")
+        stringBuilder.append("\n------------------------------\n")
+        return stringBuilder.toString()
+    }
+
+    override fun formatError(logError: LogError): String {
+        TODO("Not yet implemented")
     }
 }
