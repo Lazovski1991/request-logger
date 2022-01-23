@@ -46,6 +46,19 @@ class FormatServiceImpl : FormatService {
     }
 
     override fun formatError(logError: LogError): String {
-        TODO("Not yet implemented")
+        val stringBuilder = StringBuilder()
+        stringBuilder.append("\n------------------------------\n")
+        stringBuilder.append("RESPONSE!!!!!\n")
+        stringBuilder.append("REQUEST-ID: ${logError.requestId}\n")
+        stringBuilder.append("METHOD: ${logError.method}\n")
+        stringBuilder.append("URI: ${logError.uri}\n")
+        stringBuilder.append("HEADERS: ${logError.headers}\n")
+        stringBuilder.append("USER: email=${logError.userInfo.email}, username=${logError.userInfo.userName}\n")
+        stringBuilder.append("PROFILE: ${logError.profile}\n")
+        stringBuilder.append("TIME: ${logError.time}\n")
+        stringBuilder.append("BODY: ${logError.body}")
+        stringBuilder.append("STACKTRACE: -->\n ${logError.stackTrace}")
+        stringBuilder.append("\n------------------------------\n")
+        return stringBuilder.toString()
     }
 }

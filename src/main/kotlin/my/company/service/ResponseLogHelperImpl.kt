@@ -38,7 +38,8 @@ class ResponseLogHelperImpl @Autowired constructor(
             val logResponse = createLogResponseModel(request, response)
             logger.info(formatService.formatResponse(logResponse))
         } else {
-            logger.error(createLogResponseModelError(request, response).toString())
+            val logError = createLogResponseModelError(request, response)
+            logger.info(formatService.formatError(logError))
         }
     }
 
