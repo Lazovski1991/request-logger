@@ -59,7 +59,7 @@ class ResponseLogHelperImpl @Autowired constructor(
             MDC.get(PROFILE_MDC),
             "POD_IP",
             body = getResponseBody(response),
-            stackTrace = MDC.get(STACKTRACE_MDC) ?: "unknown",
+            stackTrace = getStackTrace(),
         )
     }
 
@@ -115,5 +115,14 @@ class ResponseLogHelperImpl @Autowired constructor(
             userInfo.userName = MDC.get(USER_USERNAME_MDC)
         }
         return UserInfo()
+    }
+
+    private fun getStackTrace(): String {
+        var trace = MDC.get(STACKTRACE_MDC) ?: "unknown"
+        val maxLengthStacktrace = logProperties.lengthStacktrace
+        if (trace.length > maxLengthStacktrace) {
+            trace = trace.substring(0, maxLengthStacktrace)
+        }
+        return trace
     }
 }

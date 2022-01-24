@@ -22,6 +22,7 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-web:2.6.2")
     kapt("org.springframework.boot:spring-boot-configuration-processor:2.6.2")
     api("com.github.Lazovski1991:jwt-parse-lib:1.0.0-T")
+    implementation("net.logstash.logback:logstash-logback-encoder:7.0.1")
 }
 
 tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
