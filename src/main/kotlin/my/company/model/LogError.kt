@@ -1,17 +1,14 @@
 package my.company.model
 
-import java.time.LocalDateTime
-
 data class LogError(
-    val requestId: String,
-    val method: String,
-    val status: String,
-    val uri: String,
-    val headers: List<MutableMap<String, List<String>>>,
-    val userInfo: UserInfo,
-    val profile: String,
-    val podIp: String,
-    val time: LocalDateTime = LocalDateTime.now(),
-    val body: String,
+    override val requestId: String,
+    override val method: String,
+    override val status: String,
+    override val uri: String,
+    override val headers: List<MutableMap<String, List<String>>>,
+    override val userInfo: UserInfo,
+    override val profile: String,
+    override val podIp: String,
+    override val body: String,
     val stackTrace: String
-)
+) : AbstractResponse()

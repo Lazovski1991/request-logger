@@ -1,5 +1,6 @@
 package my.company.service
 
+import my.company.model.AbstractResponse
 import my.company.model.LogError
 import my.company.model.LogRequest
 import my.company.model.LogResponse
@@ -30,35 +31,30 @@ class FormatServiceImpl : FormatService {
     }
 
     override fun formatResponse(logResponse: LogResponse): String {
-        val stringBuilder = StringBuilder()
-        stringBuilder.append("\n------------------------------\n")
-        stringBuilder.append("RESPONSE!!!!!\n")
-        stringBuilder.append("REQUEST-ID: ${logResponse.requestId}\n")
-        stringBuilder.append("METHOD: ${logResponse.method}\n")
-        stringBuilder.append("URI: ${logResponse.uri}\n")
-        stringBuilder.append("HEADERS: ${logResponse.headers}\n")
-        stringBuilder.append("USER: email=${logResponse.userInfo.email}, username=${logResponse.userInfo.userName}\n")
-        stringBuilder.append("PROFILE: ${logResponse.profile}\n")
-        stringBuilder.append("TIME: ${logResponse.time}\n")
-        stringBuilder.append("BODY: ${logResponse.body}")
+        val stringBuilder = baseFormatResponse(logResponse)
         stringBuilder.append("\n------------------------------\n")
         return stringBuilder.toString()
     }
 
     override fun formatError(logError: LogError): String {
-        val stringBuilder = StringBuilder()
-        stringBuilder.append("\n------------------------------\n")
-        stringBuilder.append("RESPONSE!!!!!\n")
-        stringBuilder.append("REQUEST-ID: ${logError.requestId}\n")
-        stringBuilder.append("METHOD: ${logError.method}\n")
-        stringBuilder.append("URI: ${logError.uri}\n")
-        stringBuilder.append("HEADERS: ${logError.headers}\n")
-        stringBuilder.append("USER: email=${logError.userInfo.email}, username=${logError.userInfo.userName}\n")
-        stringBuilder.append("PROFILE: ${logError.profile}\n")
-        stringBuilder.append("TIME: ${logError.time}\n")
-        stringBuilder.append("BODY: ${logError.body}")
+        val stringBuilder = baseFormatResponse(logError)
         stringBuilder.append("STACKTRACE: -->\n ${logError.stackTrace}")
         stringBuilder.append("\n------------------------------\n")
         return stringBuilder.toString()
+    }
+
+    private fun baseFormatResponse(responseModel: AbstractResponse): StringBuilder {
+        val stringBuilder = StringBuilder()
+        stringBuilder.append("\n------------------------------\n")
+        stringBuilder.append("RESPONSE!!!!!\n")
+        stringBuilder.append("REQUEST-ID: ${responseModel.requestId}\n")
+        stringBuilder.append("METHOD: ${responseModel.method}\n")
+        stringBuilder.append("URI: ${responseModel.uri}\n")
+        stringBuilder.append("HEADERS: ${responseModel.headers}\n")
+        stringBuilder.append("USER: email=${responseModel.userInfo.email}, username=${responseModel.userInfo.userName}\n")
+        stringBuilder.append("PROFILE: ${responseModel.profile}\n")
+        stringBuilder.append("TIME: ${responseModel.time}\n")
+        stringBuilder.append("BODY: ${responseModel.body}")
+        return stringBuilder
     }
 }
