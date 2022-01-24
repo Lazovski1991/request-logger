@@ -47,11 +47,8 @@ class ResponseLogHelperImpl @Autowired constructor(
         request: ContentCachingRequestWrapper,
         response: ContentCachingResponseWrapper
     ): LogError {
-        val userInfo = UserInfo()
-        if (request.getHeader(logProperties.tokenHeaderName) != null) {
-            userInfo.email = MDC.get(USER_EMAIL_MDC)
-            userInfo.userName = MDC.get(USER_USERNAME_MDC)
-        }
+        val userInfo = getUserInfo(request)
+
         return LogError(
             MDC.get(REQUEST_ID_MDC),
             request.method,
@@ -70,11 +67,8 @@ class ResponseLogHelperImpl @Autowired constructor(
         request: ContentCachingRequestWrapper,
         response: ContentCachingResponseWrapper
     ): LogResponse {
-        val userInfo = UserInfo()
-        if (request.getHeader(logProperties.tokenHeaderName) != null) {
-            userInfo.email = MDC.get(USER_EMAIL_MDC)
-            userInfo.userName = MDC.get(USER_USERNAME_MDC)
-        }
+        val userInfo = getUserInfo(request)
+
         return LogResponse(
             MDC.get(REQUEST_ID_MDC),
             request.method,
@@ -112,5 +106,14 @@ class ResponseLogHelperImpl @Autowired constructor(
         return (!response.contentType.isNullOrBlank()
                 && (response.contentType.contains(MediaType.APPLICATION_JSON_VALUE)
                 || response.contentType.contains(MediaType.APPLICATION_FORM_URLENCODED_VALUE)))
+    }
+
+    private fun getUserInfo(request: ContentCachingRequestWrapper): UserInfo {
+        val userInfo = UserInfo()
+        if (request.getHeader(logProperties.tokenHeaderName) != null) {
+            userInfo.email = MDC.get(USER_EMAIL_MDC)
+            userInfo.userName = MDC.get(USER_USERNAME_MDC)
+        }
+        return UserInfo()
     }
 }
