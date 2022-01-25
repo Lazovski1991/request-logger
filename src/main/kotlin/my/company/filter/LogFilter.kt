@@ -1,6 +1,7 @@
 package my.company.filter
 
 import my.company.config.LogProperties
+import my.company.service.CheckUrlService
 import my.company.service.RequestLogHelper
 import my.company.service.ResponseLogHelper
 import org.slf4j.MDC
@@ -14,7 +15,8 @@ import javax.servlet.http.HttpServletResponse
 class LogFilter constructor(
     private val logProperties: LogProperties,
     private val requestLogHelper: RequestLogHelper,
-    private val responseLogHelper: ResponseLogHelper
+    private val responseLogHelper: ResponseLogHelper,
+    private val checkUrlService: CheckUrlService
 ) : OncePerRequestFilter() {
     override fun doFilterInternal(
         request: HttpServletRequest, response: HttpServletResponse, filterChain: FilterChain
@@ -22,21 +24,23 @@ class LogFilter constructor(
         if (isAsyncDispatch(request)) {
             filterChain.doFilter(request, response)
         } else {
-            if (logProperties.urlExclude.contains(request.requestURI)) {
+            if (checkUrlService.checkUrl(logProperties.urlExclude, request)) {
                 filterChain.doFilter(request, response)
-                return
-            }
-            val wrappedResponse = ContentCachingResponseWrapper(response)
-            val wrappedRequest = ContentCachingRequestWrapper(request)
+            } else {
 
-            try {
-                filterChain.doFilter(wrappedRequest, wrappedResponse)
-            } finally {
-                requestLogHelper.logRequest(wrappedRequest)
-                responseLogHelper.logResponse(wrappedRequest, wrappedResponse)
+                val wrappedResponse = ContentCachingResponseWrapper(response)
+                val wrappedRequest = ContentCachingRequestWrapper(request)
 
-                wrappedResponse.copyBodyToResponse()
-                MDC.clear()
+                try {
+                    filterChain.doFilter(wrappedRequest, wrappedResponse)
+                } finally {
+                    requestLogHelper.logRequest(wrappedRequest)
+                    //request логирование выключаем в другом месте, так как если мы хотим отдельно логировать ответ,
+                    // нужно чтоб сработала чать логики запроса
+                    if (logProperties.enableLogResponse) responseLogHelper.logResponse(wrappedRequest, wrappedResponse)
+                    wrappedResponse.copyBodyToResponse()
+                    MDC.clear()
+                }
             }
         }
     }

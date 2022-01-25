@@ -76,7 +76,7 @@ class RequestLogHelperImpl @Autowired constructor(
             profile = profile,
             body = getRequestBody(request)
         )
-        logger.info(formatService.formatRequest(logRequest))
+        if (logProperties.enableLogRequest) logger.info(formatService.formatRequest(logRequest))
     }
 
     private fun getPartFileName(parts: MutableCollection<Part>): List<String> {

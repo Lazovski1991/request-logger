@@ -1,6 +1,7 @@
 package my.company.config
 
 import my.company.filter.LogFilter
+import my.company.service.CheckUrlService
 import my.company.service.RequestLogHelper
 import my.company.service.ResponseLogHelper
 import org.springframework.beans.factory.annotation.Autowired
@@ -21,7 +22,8 @@ class LogAutoConfig {
     fun createLogFilter(
         @Autowired logProperties: LogProperties,
         @Autowired requestLogHelper: RequestLogHelper,
-        @Autowired responseLogHelper: ResponseLogHelper
+        @Autowired responseLogHelper: ResponseLogHelper,
+        @Autowired checkUrlService: CheckUrlService
     ): LogFilter =
-        LogFilter(logProperties, requestLogHelper, responseLogHelper)
+        LogFilter(logProperties, requestLogHelper, responseLogHelper, checkUrlService)
 }
