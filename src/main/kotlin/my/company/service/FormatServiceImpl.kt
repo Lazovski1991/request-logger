@@ -10,8 +10,7 @@ import org.springframework.stereotype.Service
 class FormatServiceImpl : FormatService {
     override fun formatRequest(logRequest: LogRequest): String {
         val stringBuilder = StringBuilder()
-        stringBuilder.append("\n------------------------------\n")
-        stringBuilder.append("REQUEST!!!!!\n")
+        stringBuilder.append("\n------------------------------>\n")
         stringBuilder.append("REQUEST-ID: ${logRequest.requestId}\n")
         stringBuilder.append("METHOD: ${logRequest.method}\n")
         stringBuilder.append("URI: ${logRequest.uri}\n")
@@ -26,27 +25,26 @@ class FormatServiceImpl : FormatService {
         stringBuilder.append("PROFILE: ${logRequest.profile}\n")
         stringBuilder.append("TIME: ${logRequest.time}\n")
         stringBuilder.append("BODY: \n${logRequest.body}")
-        stringBuilder.append("\n------------------------------\n")
+        stringBuilder.append("\n<------------------------------>\n")
         return stringBuilder.toString()
     }
 
     override fun formatResponse(logResponse: LogResponse): String {
         val stringBuilder = baseFormatResponse(logResponse)
-        stringBuilder.append("\n------------------------------\n")
+        stringBuilder.append("\n<------------------------------>\n")
         return stringBuilder.toString()
     }
 
     override fun formatError(logError: LogError): String {
         val stringBuilder = baseFormatResponse(logError)
         stringBuilder.append("STACKTRACE: -->\n ${logError.stackTrace}")
-        stringBuilder.append("\n------------------------------\n")
+        stringBuilder.append("\n<------------------------------>\n")
         return stringBuilder.toString()
     }
 
     private fun baseFormatResponse(responseModel: AbstractResponse): StringBuilder {
         val stringBuilder = StringBuilder()
-        stringBuilder.append("\n------------------------------\n")
-        stringBuilder.append("RESPONSE!!!!!\n")
+        stringBuilder.append("\n------------------------------>>>\n")
         stringBuilder.append("REQUEST-ID: ${responseModel.requestId}\n")
         stringBuilder.append("METHOD: ${responseModel.method}\n")
         stringBuilder.append("URI: ${responseModel.uri}\n")

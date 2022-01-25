@@ -35,7 +35,7 @@ class RequestLogHelperImpl @Autowired constructor(
     private val profile: String = "unknown"
 
     companion object {
-        val logger: Logger = LoggerFactory.getLogger(RequestLogHelperImpl::class.java)
+        val logger: Logger = LoggerFactory.getLogger("REQUEST")
     }
 
     override fun logRequest(request: ContentCachingRequestWrapper) {

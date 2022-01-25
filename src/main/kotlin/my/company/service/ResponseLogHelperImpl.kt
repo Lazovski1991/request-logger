@@ -27,7 +27,7 @@ class ResponseLogHelperImpl @Autowired constructor(
     val formatService: FormatService
 ) : ResponseLogHelper {
     companion object {
-        val logger: Logger = LoggerFactory.getLogger(RequestLogHelperImpl::class.java)
+        val logger: Logger = LoggerFactory.getLogger("RESPONSE")
     }
 
     override fun logResponse(
