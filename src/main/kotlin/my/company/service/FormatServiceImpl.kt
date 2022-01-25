@@ -11,6 +11,7 @@ class FormatServiceImpl : FormatService {
     override fun formatRequest(logRequest: LogRequest): String {
         val stringBuilder = StringBuilder()
         stringBuilder.append("\n------------------------------>\n")
+        stringBuilder.append("APPLICATION: ${logRequest.applicationName}\n")
         stringBuilder.append("REQUEST-ID: ${logRequest.requestId}\n")
         stringBuilder.append("METHOD: ${logRequest.method}\n")
         stringBuilder.append("URI: ${logRequest.uri}\n")
@@ -45,6 +46,7 @@ class FormatServiceImpl : FormatService {
     private fun baseFormatResponse(responseModel: AbstractResponse): StringBuilder {
         val stringBuilder = StringBuilder()
         stringBuilder.append("\n------------------------------>>>\n")
+        stringBuilder.append("APPLICATION: ${responseModel.applicationName}\n")
         stringBuilder.append("REQUEST-ID: ${responseModel.requestId}\n")
         stringBuilder.append("METHOD: ${responseModel.method}\n")
         stringBuilder.append("URI: ${responseModel.uri}\n")

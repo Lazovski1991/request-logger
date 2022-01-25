@@ -2,6 +2,7 @@ package my.company.model
 
 data class LogResponse(
     override val requestId: String,
+    override val applicationName: String,
     override val method: String,
     override val status: String,
     override val uri: String,

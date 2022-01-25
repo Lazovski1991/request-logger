@@ -10,5 +10,5 @@ data class LogProperties(
     var filePartType: List<String> = listOf("image/jpeg"), //список типов файлов имена которых логируем
     var enableLogStacktrace: Boolean = true,
     var lengthStacktrace:Int = 10000
-//todo отдельно выключать логи на запросы, ответы, юзер инфо, потом науиться какие поля юзер инфо доставать, имя приложения
+//todo отдельно выключать логи на запросы, ответы, юзер инфо, потом науиться какие поля юзер инфо доставать
 )

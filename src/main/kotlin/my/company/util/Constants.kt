@@ -8,4 +8,5 @@ object Constants {
     const val USER_EMAIL_MDC: String = "userEmail"
     const val USER_USERNAME_MDC: String = "userName"
     const val STACKTRACE_MDC: String = "stacktrace"
+    const val APPLICATION_NAME: String = "applicationName"
 }

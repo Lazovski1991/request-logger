@@ -4,6 +4,7 @@ import my.company.config.LogProperties
 import my.company.jwtparselib.service.ParseTokenUtilService
 import my.company.model.LogRequest
 import my.company.model.UserInfo
+import my.company.util.Constants.APPLICATION_NAME
 import my.company.util.Constants.DEVICE_ID_HEADER
 import my.company.util.Constants.PROFILE_MDC
 import my.company.util.Constants.REQUEST_ID_HEADER
@@ -30,9 +31,11 @@ class RequestLogHelperImpl @Autowired constructor(
     val jwtParse: ParseTokenUtilService,
     val formatService: FormatService
 ) : RequestLogHelper {
-
-    @Value("\${spring.profiles.active}")
+    @Value("\${spring.profiles.active: unknown}")
     private val profile: String = "unknown"
+
+    @Value("\${spring.application.name:unknown}")
+    private val applicationName: String = "unknown"
 
     companion object {
         val logger: Logger = LoggerFactory.getLogger("REQUEST")
@@ -45,6 +48,7 @@ class RequestLogHelperImpl @Autowired constructor(
         }
         MDC.put(REQUEST_ID_MDC, requestId)
         MDC.put(PROFILE_MDC, profile)
+        MDC.put(APPLICATION_NAME, applicationName)
 
         val token = request.getHeader(logProperties.tokenHeaderName)
 
@@ -58,6 +62,7 @@ class RequestLogHelperImpl @Autowired constructor(
 
         val logRequest = LogRequest(
             requestId,
+            applicationName,
             request.method,
             request.requestURI,
             request.getHeader(HttpHeaders.USER_AGENT),

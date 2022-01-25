@@ -4,6 +4,7 @@ import java.time.LocalDateTime
 
 data class LogRequest(
     val requestId: String,
+    val applicationName: String,
     val method: String,
     val uri: String,
     val userAgent: String,

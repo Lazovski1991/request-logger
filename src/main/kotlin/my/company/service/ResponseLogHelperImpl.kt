@@ -1,10 +1,10 @@
 package my.company.service
 
-import com.fasterxml.jackson.databind.ObjectMapper
 import my.company.config.LogProperties
 import my.company.model.LogError
 import my.company.model.LogResponse
 import my.company.model.UserInfo
+import my.company.util.Constants.APPLICATION_NAME
 import my.company.util.Constants.PROFILE_MDC
 import my.company.util.Constants.REQUEST_ID_MDC
 import my.company.util.Constants.STACKTRACE_MDC
@@ -51,6 +51,7 @@ class ResponseLogHelperImpl @Autowired constructor(
 
         return LogError(
             MDC.get(REQUEST_ID_MDC),
+            MDC.get(APPLICATION_NAME),
             request.method,
             response.status.toString(),
             request.requestURI,
@@ -71,6 +72,7 @@ class ResponseLogHelperImpl @Autowired constructor(
 
         return LogResponse(
             MDC.get(REQUEST_ID_MDC),
+            MDC.get(APPLICATION_NAME),
             request.method,
             response.status.toString(),
             request.requestURI,

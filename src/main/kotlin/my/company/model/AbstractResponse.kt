@@ -4,6 +4,7 @@ import java.time.LocalDateTime
 
 abstract class AbstractResponse {
     abstract val requestId: String
+    abstract val applicationName: String
     abstract val method: String
     abstract val status: String
     abstract val uri: String
