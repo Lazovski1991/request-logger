@@ -20,6 +20,7 @@ repositories {
 dependencies {
     implementation("org.jetbrains.kotlin:kotlin-stdlib:1.6.0")
     implementation("org.springframework.boot:spring-boot-starter-web:2.6.2")
+    testImplementation("org.springframework.boot:spring-boot-starter-test")
     kapt("org.springframework.boot:spring-boot-configuration-processor:2.6.2")
     api("com.github.Lazovski1991:jwt-parse-lib:1.0.0-T")
     implementation("net.logstash.logback:logstash-logback-encoder:7.0.1")

@@ -24,10 +24,9 @@ class LogFilter constructor(
         if (isAsyncDispatch(request)) {
             filterChain.doFilter(request, response)
         } else {
-            if (checkUrlService.checkUrl(logProperties.urlExclude, request)) {
+            if (logProperties.urlExclude.isNotEmpty() && checkUrlService.checkUrl(request)) {
                 filterChain.doFilter(request, response)
             } else {
-
                 val wrappedResponse = ContentCachingResponseWrapper(response)
                 val wrappedRequest = ContentCachingRequestWrapper(request)
 
