@@ -9,6 +9,7 @@ import my.company.util.Constants.DEVICE_ID_HEADER
 import my.company.util.Constants.PROFILE_MDC
 import my.company.util.Constants.REQUEST_ID_HEADER
 import my.company.util.Constants.REQUEST_ID_MDC
+import my.company.util.Constants.TIME_START_REQUEST
 import my.company.util.Constants.USER_EMAIL_MDC
 import my.company.util.Constants.USER_USERNAME_MDC
 import org.slf4j.Logger
@@ -46,6 +47,7 @@ class RequestLogHelperImpl @Autowired constructor(
         if (requestId == null || requestId.isBlank()) {
             requestId = UUID.randomUUID().toString()
         }
+
         MDC.put(REQUEST_ID_MDC, requestId)
         MDC.put(PROFILE_MDC, profile)
         MDC.put(APPLICATION_NAME, applicationName)

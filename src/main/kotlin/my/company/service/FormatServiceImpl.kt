@@ -50,6 +50,7 @@ class FormatServiceImpl : FormatService {
         stringBuilder.append("REQUEST-ID: ${responseModel.requestId}\n")
         stringBuilder.append("METHOD: ${responseModel.method}\n")
         stringBuilder.append("URI: ${responseModel.uri}\n")
+        stringBuilder.append("DURATION_REQUEST: ${responseModel.duration} ms\n")
         stringBuilder.append("HEADERS: ${responseModel.headers}\n")
         stringBuilder.append("USER: email=${responseModel.userInfo.email}, username=${responseModel.userInfo.userName}\n")
         stringBuilder.append("PROFILE: ${responseModel.profile}\n")

@@ -4,7 +4,6 @@ import my.company.config.LogProperties
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import javax.annotation.PostConstruct
-import javax.servlet.http.HttpServletRequest
 
 @Service
 class CheckUrlServiceImpl @Autowired constructor(
@@ -14,15 +13,14 @@ class CheckUrlServiceImpl @Autowired constructor(
     lateinit var urlIncludeSingleStar: MutableList<String>
     lateinit var urlIncludeDoubleStar: MutableList<String>
 
-    override fun checkUrl(request: HttpServletRequest): Boolean {
-        val requestURI = request.requestURI.toString()
+    override fun checkUrl(request: String): Boolean {
 
         if (urlIncludeDoubleStar.isNotEmpty()) {
-            if (checkDoubleStar(requestURI)) return true
+            if (checkDoubleStar(request)) return true
         } else if (urlIncludeSingleStar.isNotEmpty()) {
-            if (checkSingleStar(requestURI)) return true
+            if (checkSingleStar(request)) return true
         } else if (urlIncludeNotStar.isNotEmpty()) {
-            return urlIncludeNotStar.contains(requestURI)
+            return urlIncludeNotStar.contains(request)
         }
         return false
     }

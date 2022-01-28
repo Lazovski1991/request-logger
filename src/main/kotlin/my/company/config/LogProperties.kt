@@ -12,5 +12,5 @@ data class LogProperties(
     var lengthStacktrace: Int = 10000,
     var enableLogRequest: Boolean = true,
     var enableLogResponse: Boolean = true
-//todo сделать чтоб и со звездочками урл можно было, продолжительность запроса, юзер инфо, потом науиться какие поля юзер инфо доставать
+//todo юзер инфо, потом науиться какие поля юзер инфо доставать
 )

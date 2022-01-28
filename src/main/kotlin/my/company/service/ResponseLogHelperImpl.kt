@@ -5,9 +5,11 @@ import my.company.model.LogError
 import my.company.model.LogResponse
 import my.company.model.UserInfo
 import my.company.util.Constants.APPLICATION_NAME
+import my.company.util.Constants.DURATION_REQUEST
 import my.company.util.Constants.PROFILE_MDC
 import my.company.util.Constants.REQUEST_ID_MDC
 import my.company.util.Constants.STACKTRACE_MDC
+import my.company.util.Constants.TIME_START_REQUEST
 import my.company.util.Constants.USER_EMAIL_MDC
 import my.company.util.Constants.USER_USERNAME_MDC
 import org.slf4j.Logger
@@ -34,6 +36,8 @@ class ResponseLogHelperImpl @Autowired constructor(
         request: ContentCachingRequestWrapper,
         response: ContentCachingResponseWrapper
     ) {
+        val durationRequest = System.currentTimeMillis() - request.getAttribute(TIME_START_REQUEST).toString().toLong()
+        MDC.put(DURATION_REQUEST, durationRequest.toString())
         if (response.status !in 500..599 || !logProperties.enableLogStacktrace) {
             val logResponse = createLogResponseModel(request, response)
             logger.info(formatService.formatResponse(logResponse))
@@ -56,6 +60,7 @@ class ResponseLogHelperImpl @Autowired constructor(
             response.status.toString(),
             request.requestURI,
             getHeaders(response),
+            MDC.get(DURATION_REQUEST),
             userInfo,
             MDC.get(PROFILE_MDC),
             "POD_IP",
@@ -77,6 +82,7 @@ class ResponseLogHelperImpl @Autowired constructor(
             response.status.toString(),
             request.requestURI,
             getHeaders(response),
+            MDC.get(DURATION_REQUEST),
             userInfo,
             MDC.get(PROFILE_MDC),
             "POD_IP",

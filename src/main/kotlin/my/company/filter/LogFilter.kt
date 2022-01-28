@@ -4,6 +4,7 @@ import my.company.config.LogProperties
 import my.company.service.CheckUrlService
 import my.company.service.RequestLogHelper
 import my.company.service.ResponseLogHelper
+import my.company.util.Constants
 import org.slf4j.MDC
 import org.springframework.web.filter.OncePerRequestFilter
 import org.springframework.web.util.ContentCachingRequestWrapper
@@ -24,9 +25,11 @@ class LogFilter constructor(
         if (isAsyncDispatch(request)) {
             filterChain.doFilter(request, response)
         } else {
-            if (logProperties.urlExclude.isNotEmpty() && checkUrlService.checkUrl(request)) {
+            if (logProperties.urlExclude.isNotEmpty() && checkUrlService.checkUrl(request.requestURI.toString())) {
                 filterChain.doFilter(request, response)
             } else {
+                request.setAttribute(Constants.TIME_START_REQUEST, System.currentTimeMillis())
+
                 val wrappedResponse = ContentCachingResponseWrapper(response)
                 val wrappedRequest = ContentCachingRequestWrapper(request)
 
