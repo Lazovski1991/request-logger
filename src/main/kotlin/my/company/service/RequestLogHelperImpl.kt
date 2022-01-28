@@ -77,8 +77,7 @@ class RequestLogHelperImpl @Autowired constructor(
     }
 
     private fun checkOrGetTokenInfo(token: String): String {
-        return if (logProperties.tokenHeaderName != null
-            && logProperties.fieldNameToken.isNotEmpty()
+        return if (logProperties.fieldNameToken.isNotEmpty()
             && token != "unknown"
         ) infoExtractFromTokenService.getInfoFromToken(token) else "unknown"
     }
