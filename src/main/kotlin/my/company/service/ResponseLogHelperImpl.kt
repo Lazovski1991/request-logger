@@ -3,15 +3,13 @@ package my.company.service
 import my.company.config.LogProperties
 import my.company.model.LogError
 import my.company.model.LogResponse
-import my.company.model.UserInfo
 import my.company.util.Constants.APPLICATION_NAME
-import my.company.util.Constants.DURATION_REQUEST
+import my.company.util.Constants.DURATION_REQUEST_MDC
 import my.company.util.Constants.PROFILE_MDC
 import my.company.util.Constants.REQUEST_ID_MDC
 import my.company.util.Constants.STACKTRACE_MDC
 import my.company.util.Constants.TIME_START_REQUEST
-import my.company.util.Constants.USER_EMAIL_MDC
-import my.company.util.Constants.USER_USERNAME_MDC
+import my.company.util.Constants.TOKEN_INFO_MDC
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.slf4j.MDC
@@ -37,7 +35,7 @@ class ResponseLogHelperImpl @Autowired constructor(
         response: ContentCachingResponseWrapper
     ) {
         val durationRequest = System.currentTimeMillis() - request.getAttribute(TIME_START_REQUEST).toString().toLong()
-        MDC.put(DURATION_REQUEST, durationRequest.toString())
+        MDC.put(DURATION_REQUEST_MDC, durationRequest.toString())
         if (response.status !in 500..599 || !logProperties.enableLogStacktrace) {
             val logResponse = createLogResponseModel(request, response)
             logger.info(formatService.formatResponse(logResponse))
@@ -51,8 +49,6 @@ class ResponseLogHelperImpl @Autowired constructor(
         request: ContentCachingRequestWrapper,
         response: ContentCachingResponseWrapper
     ): LogError {
-        val userInfo = getUserInfo(request)
-
         return LogError(
             MDC.get(REQUEST_ID_MDC),
             MDC.get(APPLICATION_NAME),
@@ -60,8 +56,8 @@ class ResponseLogHelperImpl @Autowired constructor(
             response.status.toString(),
             request.requestURI,
             getHeaders(response),
-            MDC.get(DURATION_REQUEST),
-            userInfo,
+            MDC.get(DURATION_REQUEST_MDC),
+            MDC.get(TOKEN_INFO_MDC) ?: "unknown",
             MDC.get(PROFILE_MDC),
             "POD_IP",
             body = getResponseBody(response),
@@ -73,8 +69,6 @@ class ResponseLogHelperImpl @Autowired constructor(
         request: ContentCachingRequestWrapper,
         response: ContentCachingResponseWrapper
     ): LogResponse {
-        val userInfo = getUserInfo(request)
-
         return LogResponse(
             MDC.get(REQUEST_ID_MDC),
             MDC.get(APPLICATION_NAME),
@@ -82,8 +76,8 @@ class ResponseLogHelperImpl @Autowired constructor(
             response.status.toString(),
             request.requestURI,
             getHeaders(response),
-            MDC.get(DURATION_REQUEST),
-            userInfo,
+            MDC.get(DURATION_REQUEST_MDC),
+            MDC.get(TOKEN_INFO_MDC) ?: "unknown",
             MDC.get(PROFILE_MDC),
             "POD_IP",
             body = getResponseBody(response),
@@ -114,15 +108,6 @@ class ResponseLogHelperImpl @Autowired constructor(
         return (!response.contentType.isNullOrBlank()
                 && (response.contentType.contains(MediaType.APPLICATION_JSON_VALUE)
                 || response.contentType.contains(MediaType.APPLICATION_FORM_URLENCODED_VALUE)))
-    }
-
-    private fun getUserInfo(request: ContentCachingRequestWrapper): UserInfo {
-        val userInfo = UserInfo()
-        if (request.getHeader(logProperties.tokenHeaderName) != null) {
-            userInfo.email = MDC.get(USER_EMAIL_MDC)
-            userInfo.userName = MDC.get(USER_USERNAME_MDC)
-        }
-        return UserInfo()
     }
 
     private fun getStackTrace(): String {

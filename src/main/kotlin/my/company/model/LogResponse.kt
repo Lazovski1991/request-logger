@@ -8,7 +8,7 @@ data class LogResponse(
     override val uri: String,
     override val headers: List<MutableMap<String, List<String>>>,
     override val duration: String,
-    override val userInfo: UserInfo,
+    override val tokenInfo: String,
     override val profile: String,
     override val podIp: String,
     override val body: String

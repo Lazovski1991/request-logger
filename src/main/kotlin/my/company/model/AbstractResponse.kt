@@ -10,7 +10,7 @@ abstract class AbstractResponse {
     abstract val uri: String
     abstract val headers: List<MutableMap<String, List<String>>>
     abstract val duration: String
-    abstract val userInfo: UserInfo
+    abstract val tokenInfo: String
     abstract val profile: String
     abstract val podIp: String
     val time: LocalDateTime = LocalDateTime.now()

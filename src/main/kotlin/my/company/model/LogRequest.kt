@@ -13,7 +13,7 @@ data class LogRequest(
     val headers: List<MutableMap<String, List<String>>>,
     val params: List<MutableMap<String, String>>,
     var fileUpload: List<String>,
-    val userInfo: UserInfo,
+    val tokenInfo: String,
     val requestIp: String,
     val profile: String?,
     val time: LocalDateTime = LocalDateTime.now(),

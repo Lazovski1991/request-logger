@@ -1,17 +1,12 @@
 package my.company.service
 
 import my.company.config.LogProperties
-import my.company.jwtparselib.service.ParseTokenUtilService
 import my.company.model.LogRequest
-import my.company.model.UserInfo
 import my.company.util.Constants.APPLICATION_NAME
 import my.company.util.Constants.DEVICE_ID_HEADER
 import my.company.util.Constants.PROFILE_MDC
 import my.company.util.Constants.REQUEST_ID_HEADER
 import my.company.util.Constants.REQUEST_ID_MDC
-import my.company.util.Constants.TIME_START_REQUEST
-import my.company.util.Constants.USER_EMAIL_MDC
-import my.company.util.Constants.USER_USERNAME_MDC
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.slf4j.MDC
@@ -29,7 +24,7 @@ import javax.servlet.http.Part
 @Service
 class RequestLogHelperImpl @Autowired constructor(
     val logProperties: LogProperties,
-    val jwtParse: ParseTokenUtilService,
+    val infoExtractFromTokenService: InfoExtractFromTokenService,
     val formatService: FormatService
 ) : RequestLogHelper {
     @Value("\${spring.profiles.active: unknown}")
@@ -52,15 +47,7 @@ class RequestLogHelperImpl @Autowired constructor(
         MDC.put(PROFILE_MDC, profile)
         MDC.put(APPLICATION_NAME, applicationName)
 
-        val token = request.getHeader(logProperties.tokenHeaderName)
-
-        val userInfo = UserInfo()
-        if (token != null) {
-            userInfo.email = jwtParse.getValueFieldFromToken(token, "email")
-            userInfo.userName = jwtParse.getValueFieldFromToken(token, "username")
-            MDC.put(USER_EMAIL_MDC, userInfo.email)
-            MDC.put(USER_USERNAME_MDC, userInfo.userName)
-        }
+        val token = getToken(request)
 
         val logRequest = LogRequest(
             requestId,
@@ -69,16 +56,31 @@ class RequestLogHelperImpl @Autowired constructor(
             request.requestURI,
             request.getHeader(HttpHeaders.USER_AGENT),
             request.getHeader(DEVICE_ID_HEADER) ?: "unknown",
-            request.getHeader(logProperties.tokenHeaderName) ?: "unknown",
+            token,
             getHeaders(request),
             getParam(request),
             if (isIncludeFormData(request)) getPartFileName(request.parts) else listOf(),
-            userInfo = userInfo,
+            tokenInfo = checkOrGetTokenInfo(token),
             requestIp = request.remoteAddr,
             profile = profile,
             body = getRequestBody(request)
         )
         if (logProperties.enableLogRequest) logger.info(formatService.formatRequest(logRequest))
+    }
+
+    private fun getToken(request: ContentCachingRequestWrapper): String {
+        var extractToken: String? = null
+        if (logProperties.tokenHeaderName != null) {
+            extractToken = request.getHeader(logProperties.tokenHeaderName)
+        }
+        return extractToken ?: "unknown"
+    }
+
+    private fun checkOrGetTokenInfo(token: String): String {
+        return if (logProperties.tokenHeaderName != null
+            && logProperties.fieldNameToken.isNotEmpty()
+            && token != "unknown"
+        ) infoExtractFromTokenService.getInfoFromToken(token) else "unknown"
     }
 
     private fun getPartFileName(parts: MutableCollection<Part>): List<String> {
@@ -98,7 +100,7 @@ class RequestLogHelperImpl @Autowired constructor(
                 logger.error("error in reading request body")
             }
         }
-        return ""
+        return "unknown"
     }
 
     private fun getHeaders(request: HttpServletRequest): List<MutableMap<String, List<String>>> {

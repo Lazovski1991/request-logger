@@ -8,8 +8,7 @@ object Constants {
 
     const val REQUEST_ID_MDC: String = "RequestId"
     const val PROFILE_MDC: String = "profile"
-    const val USER_EMAIL_MDC: String = "userEmail"
-    const val USER_USERNAME_MDC: String = "userName"
+    const val TOKEN_INFO_MDC: String = "tokenInfo"
     const val STACKTRACE_MDC: String = "stacktrace"
-    const val DURATION_REQUEST: String = "durationRequest"
+    const val DURATION_REQUEST_MDC: String = "durationRequest"
 }
