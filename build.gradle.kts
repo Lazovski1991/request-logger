@@ -4,7 +4,7 @@ plugins {
     kotlin("jvm") version "1.6.10"
     kotlin("kapt") version "1.6.10"
     kotlin("plugin.spring") version "1.4.32"
-    id("org.springframework.boot") version "2.5.8"
+    id("org.springframework.boot") version "2.4.8"
     id("io.spring.dependency-management") version "1.0.11.RELEASE"
     id("maven-publish")
 }
@@ -20,9 +20,9 @@ repositories {
 
 dependencies {
     implementation("org.jetbrains.kotlin:kotlin-stdlib:1.6.0")
-    implementation("org.springframework.boot:spring-boot-starter-web:2.6.3")
+    implementation("org.springframework.boot:spring-boot-starter-web")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
-    kapt("org.springframework.boot:spring-boot-configuration-processor:2.6.3")
+    kapt("org.springframework.boot:spring-boot-configuration-processor")
     api("com.github.Lazovski1991:jwt-parse-lib:1.0-beta2")
     implementation("net.logstash.logback:logstash-logback-encoder:7.0.1")
 }
@@ -42,7 +42,7 @@ val jar: Jar by tasks
 val bootJar: BootJar by tasks
 
 bootJar.enabled = false
-jar.enabled = false
+jar.enabled = true
 
 java {
     withSourcesJar()
