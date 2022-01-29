@@ -22,7 +22,7 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-web:2.6.2")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     kapt("org.springframework.boot:spring-boot-configuration-processor:2.6.2")
-    api("com.github.Lazovski1991:jwt-parse-lib:1.0.0-T")
+    api("com.github.Lazovski1991:jwt-parse-lib:1.0-beta1")
     implementation("net.logstash.logback:logstash-logback-encoder:7.0.1")
 }
 

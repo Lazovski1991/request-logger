@@ -14,25 +14,29 @@ class InfoExtractFromTokenServiceImpl @Autowired constructor(
     val jwtParse: ParseTokenUtilService,
 ) : InfoExtractFromTokenService {
     override fun getInfoFromToken(token: String): String {
-
         val extractInfo = mutableListOf<TokenInfo>()
-        logProperties.fieldNameToken.forEach {
-            extractInfo.add(TokenInfo(it, jwtParse.getValueFieldFromToken(token, it)))
+        try {
+            logProperties.fieldNameToken.forEach {
+                extractInfo.add(TokenInfo(it, jwtParse.getValueFieldFromToken(token, it)))
+            }
+        } catch (e: NullPointerException) {
+            println(e.message)
+        } finally {
+            val formatInfo = formatInfo(extractInfo)
+            MDC.put(Constants.TOKEN_INFO_MDC, formatInfo)
+            return formatInfo
         }
-        val formatInfo = formatInfo(extractInfo)
-        MDC.put(Constants.TOKEN_INFO_MDC, formatInfo)
-        return formatInfo
     }
+}
 
-    private fun formatInfo(extractInfo: MutableList<TokenInfo>): String {
-        val formatString = StringBuilder()
-        formatString.append("{")
-        extractInfo.forEach {
-            formatString.append("\n\t${it.fieldName} = ${it.fieldValue},")
-        }
-        formatString.substring(0, formatString.length - 1)
-        formatString.append("\n}")
-
-        return formatString.toString()
+private fun formatInfo(extractInfo: MutableList<TokenInfo>): String {
+    val formatString = StringBuilder()
+    formatString.append("{")
+    extractInfo.forEach {
+        formatString.append("\n\t${it.fieldName} = ${it.fieldValue},")
     }
+    formatString.substring(0, formatString.length - 1)
+    formatString.append("\n}")
+
+    return formatString.toString()
 }
