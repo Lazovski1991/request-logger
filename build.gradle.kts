@@ -42,7 +42,7 @@ val jar: Jar by tasks
 val bootJar: BootJar by tasks
 
 bootJar.enabled = false
-jar.enabled = true
+jar.enabled = false
 
 java {
     withSourcesJar()
