@@ -4,13 +4,13 @@ plugins {
     kotlin("jvm") version "1.6.10"
     kotlin("kapt") version "1.6.10"
     kotlin("plugin.spring") version "1.4.32"
-    id("org.springframework.boot") version "2.6.3"
+    id("org.springframework.boot") version "2.5.8"
     id("io.spring.dependency-management") version "1.0.11.RELEASE"
     id("maven-publish")
 }
 
 group = "my.company"
-version = "1.0-beta5"
+version = "1.0-beta4"
 java.sourceCompatibility = JavaVersion.VERSION_1_8
 
 repositories {
@@ -20,9 +20,9 @@ repositories {
 
 dependencies {
     implementation("org.jetbrains.kotlin:kotlin-stdlib:1.6.0")
-    implementation("org.springframework.boot:spring-boot-starter-web")
+    implementation("org.springframework.boot:spring-boot-starter-web:2.6.3")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
-    kapt("org.springframework.boot:spring-boot-configuration-processor")
+    kapt("org.springframework.boot:spring-boot-configuration-processor:2.6.3")
     api("com.github.Lazovski1991:jwt-parse-lib:1.0-beta2")
     implementation("net.logstash.logback:logstash-logback-encoder:7.0.1")
 }
@@ -52,7 +52,7 @@ publishing {
     publications {
         create<MavenPublication>("maven") {
             from(components["java"])
-            version = "1.0-beta5"
+            version = "1.0-beta4"
         }
     }
 }
