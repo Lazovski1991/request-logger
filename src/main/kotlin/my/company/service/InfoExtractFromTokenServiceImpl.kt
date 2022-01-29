@@ -27,16 +27,16 @@ class InfoExtractFromTokenServiceImpl @Autowired constructor(
             return formatInfo
         }
     }
-}
 
-private fun formatInfo(extractInfo: MutableList<TokenInfo>): String {
-    val formatString = StringBuilder()
-    formatString.append("{")
-    extractInfo.forEach {
-        formatString.append("\n\t${it.fieldName} = ${it.fieldValue},")
+    private fun formatInfo(extractInfo: MutableList<TokenInfo>): String {
+        val formatString = StringBuilder()
+        formatString.append("{")
+        extractInfo.forEach {
+            formatString.append("\n\t${it.fieldName} = ${it.fieldValue},")
+        }
+        formatString.substring(0, formatString.length - 1)
+        formatString.append("\n}")
+
+        return formatString.toString()
     }
-    formatString.substring(0, formatString.length - 1)
-    formatString.append("\n}")
-
-    return formatString.toString()
 }
