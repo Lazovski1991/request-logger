@@ -54,7 +54,7 @@ class RequestLogHelperImpl @Autowired constructor(
             applicationName,
             request.method,
             request.requestURI,
-            request.getHeader(HttpHeaders.USER_AGENT),
+            request.getHeader(HttpHeaders.USER_AGENT)?: "unknown",
             request.getHeader(DEVICE_ID_HEADER) ?: "unknown",
             token,
             getHeaders(request),
