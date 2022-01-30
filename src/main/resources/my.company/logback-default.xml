@@ -36,7 +36,7 @@
         </encoder>
     </appender>
 
-    <springProfile name="dev">
+    <springProfile name="dev, test">
         <root level="info">
             <appender-ref ref="STDOUT"/>
         </root>
