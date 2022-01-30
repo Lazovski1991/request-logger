@@ -99,7 +99,7 @@ class RequestLogHelperImpl @Autowired constructor(
                 logger.error("error in reading request body")
             }
         }
-        return "unknown"
+        return ""
     }
 
     private fun getHeaders(request: HttpServletRequest): List<MutableMap<String, List<String>>> {
