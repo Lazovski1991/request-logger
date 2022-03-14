@@ -1,7 +1,5 @@
 package my.company.service
 
-import my.company.model.AbstractResponse
-import my.company.model.LogError
 import my.company.model.LogRequest
 import my.company.model.LogResponse
 import org.springframework.stereotype.Service
@@ -27,29 +25,20 @@ class FormatServiceImpl : FormatService {
         return stringBuilder.toString()
     }
 
-    override fun formatResponse(logResponse: LogResponse): String {
-        val stringBuilder = baseFormatResponse(logResponse)
-        stringBuilder.append("\n<------------------------------>\n")
-        return stringBuilder.toString()
-    }
-
-    override fun formatError(logError: LogError): String {
-        val stringBuilder = baseFormatResponse(logError)
-        stringBuilder.append("STACKTRACE: -->\n ${logError.stackTrace}")
-        stringBuilder.append("\n<------------------------------>\n")
-        return stringBuilder.toString()
-    }
-
-    private fun baseFormatResponse(responseModel: AbstractResponse): StringBuilder {
+    override fun formatResponse(logResponse: LogResponse, enableLogStacktrace: Boolean): String {
         val stringBuilder = StringBuilder()
         stringBuilder.append("\n------------------------------>>>\n")
-        stringBuilder.append("REQUEST-ID: ${responseModel.requestId}\n")
-        stringBuilder.append("METHOD: ${responseModel.method}\n")
-        stringBuilder.append("URI: ${responseModel.uri}\n")
-        stringBuilder.append("DURATION_REQUEST: ${responseModel.duration} ms\n")
-        stringBuilder.append("TOKEN_INFO: ${responseModel.tokenInfo}\n")
-        stringBuilder.append("HEADERS: ${responseModel.headers}\n")
-        stringBuilder.append("BODY: ${responseModel.body}")
-        return stringBuilder
+        stringBuilder.append("REQUEST-ID: ${logResponse.requestId}\n")
+        stringBuilder.append("METHOD: ${logResponse.method}\n")
+        stringBuilder.append("URI: ${logResponse.uri}\n")
+        stringBuilder.append("DURATION_REQUEST: ${logResponse.duration} ms\n")
+        stringBuilder.append("TOKEN_INFO: ${logResponse.tokenInfo}\n")
+        stringBuilder.append("HEADERS: ${logResponse.headers}\n")
+        stringBuilder.append("BODY: ${logResponse.body}")
+        if (logResponse.stackTrace != null && enableLogStacktrace) {
+            stringBuilder.append("STACKTRACE: -->\n ${logResponse.stackTrace}")
+        }
+        stringBuilder.append("\n<------------------------------>\n")
+        return stringBuilder.toString()
     }
 }

@@ -4,9 +4,20 @@ import my.company.config.LogProperties
 import my.company.model.LogRequest
 import my.company.util.Constants.APPLICATION_NAME
 import my.company.util.Constants.DEVICE_ID_HEADER
+import my.company.util.Constants.DEVICE_ID_MDC
+import my.company.util.Constants.FILE_UPLOAD_MDC
+import my.company.util.Constants.REQUEST_HEADERS_MDC
+import my.company.util.Constants.METHOD_MDC
+import my.company.util.Constants.PARAM_MDC
 import my.company.util.Constants.PROFILE_MDC
+import my.company.util.Constants.REQUEST_BODY_MDC
 import my.company.util.Constants.REQUEST_ID_HEADER
 import my.company.util.Constants.REQUEST_ID_MDC
+import my.company.util.Constants.REQUEST_IP_MDC
+import my.company.util.Constants.REQUEST_URI_MDC
+import my.company.util.Constants.TOKEN_INFO_MDC
+import my.company.util.Constants.TOKEN_MDC
+import my.company.util.Constants.USER_AGENT_MDC
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.slf4j.MDC
@@ -46,22 +57,35 @@ class RequestLogHelperImpl @Autowired constructor(
         MDC.put(REQUEST_ID_MDC, requestId)
         MDC.put(PROFILE_MDC, profile)
         MDC.put(APPLICATION_NAME, applicationName)
+        MDC.put(METHOD_MDC, request.method)
+        MDC.put(REQUEST_URI_MDC, request.requestURI)
+        MDC.put(USER_AGENT_MDC, request.getHeader(HttpHeaders.USER_AGENT) ?: "unknown")
+        MDC.put(DEVICE_ID_MDC, request.getHeader(DEVICE_ID_HEADER) ?: "unknown")
+        MDC.put(TOKEN_MDC, getToken(request))
+        MDC.put(REQUEST_HEADERS_MDC, getHeaders(request))
+        MDC.put(PARAM_MDC, getParam(request))
+        MDC.put(FILE_UPLOAD_MDC, if (isIncludeFormData(request)) getPartFileName(request.parts).toString() else "")
+        MDC.put(TOKEN_INFO_MDC, checkOrGetTokenInfo(MDC.get(TOKEN_MDC)))
+        MDC.put(REQUEST_IP_MDC, request.remoteAddr)
+        MDC.put(REQUEST_BODY_MDC, getRequestBody(request))
 
-        val token = getToken(request)
+        log()
+    }
 
+    private fun log() {
         val logRequest = LogRequest(
-            requestId,
-            request.method,
-            request.requestURI,
-            request.getHeader(HttpHeaders.USER_AGENT) ?: "unknown",
-            request.getHeader(DEVICE_ID_HEADER) ?: "unknown",
-            token,
-            getHeaders(request),
-            getParam(request),
-            if (isIncludeFormData(request)) getPartFileName(request.parts) else listOf(),
-            tokenInfo = checkOrGetTokenInfo(token),
-            requestIp = request.remoteAddr,
-            body = getRequestBody(request)
+            MDC.get(REQUEST_ID_MDC),
+            MDC.get(METHOD_MDC),
+            MDC.get(REQUEST_URI_MDC),
+            MDC.get(USER_AGENT_MDC),
+            MDC.get(DEVICE_ID_MDC),
+            MDC.get(TOKEN_MDC),
+            MDC.get(REQUEST_HEADERS_MDC),
+            MDC.get(PARAM_MDC),
+            MDC.get(FILE_UPLOAD_MDC),
+            MDC.get(TOKEN_INFO_MDC),
+            MDC.get(REQUEST_IP_MDC),
+            MDC.get(REQUEST_BODY_MDC)
         )
         if (logProperties.enableLogRequest) logger.info(formatService.formatRequest(logRequest))
     }
@@ -100,20 +124,20 @@ class RequestLogHelperImpl @Autowired constructor(
         return ""
     }
 
-    private fun getHeaders(request: HttpServletRequest): List<MutableMap<String, List<String>>> {
+    private fun getHeaders(request: HttpServletRequest): String {
         val headerNamesList = request.headerNames.toList()
         return headerNamesList.map { nameHeader ->
             val headerValue = request.getHeaders(nameHeader).toList()
             mutableMapOf(nameHeader to headerValue)
-        }
+        }.toString()
     }
 
-    private fun getParam(request: HttpServletRequest): List<MutableMap<String, String>> {
+    private fun getParam(request: HttpServletRequest): String {
         val paramNames = request.parameterNames.toList()
         return paramNames.map { paramName ->
             val paramValue = request.getParameter(paramName)
             mutableMapOf(paramName to paramValue)
-        }
+        }.toString()
     }
 
     private fun isIncludeFormData(request: HttpServletRequest): Boolean {

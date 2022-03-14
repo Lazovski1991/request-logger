@@ -7,9 +7,9 @@ data class LogRequest(
     val userAgent: String,
     val deviceId: String,
     val token: String,
-    val headers: List<MutableMap<String, List<String>>>,
-    val params: List<MutableMap<String, String>>,
-    var fileUpload: List<String>,
+    val headers: String,
+    val params: String,
+    var fileUpload: String,
     val tokenInfo: String,
     val requestIp: String,
     val body: String

@@ -1,10 +1,15 @@
 package my.company.service
 
 import my.company.config.LogProperties
-import my.company.model.LogError
 import my.company.model.LogResponse
 import my.company.util.Constants.DURATION_REQUEST_MDC
+import my.company.util.Constants.METHOD_MDC
+import my.company.util.Constants.POD_IP_MDC
 import my.company.util.Constants.REQUEST_ID_MDC
+import my.company.util.Constants.REQUEST_URI_MDC
+import my.company.util.Constants.RESPONSE_BODY_MDC
+import my.company.util.Constants.RESPONSE_HEADERS_MDC
+import my.company.util.Constants.RESPONSE_STATUS_MDC
 import my.company.util.Constants.STACKTRACE_MDC
 import my.company.util.Constants.TIME_START_REQUEST
 import my.company.util.Constants.TOKEN_INFO_MDC
@@ -34,56 +39,38 @@ class ResponseLogHelperImpl @Autowired constructor(
     ) {
         val durationRequest = System.currentTimeMillis() - request.getAttribute(TIME_START_REQUEST).toString().toLong()
         MDC.put(DURATION_REQUEST_MDC, durationRequest.toString())
-        if (response.status !in 500..599 || !logProperties.enableLogStacktrace) {
-            val logResponse = createLogResponseModel(request, response)
-            logger.info(formatService.formatResponse(logResponse))
-        } else {
-            val logError = createLogResponseModelError(request, response)
-            logger.info(formatService.formatError(logError))
-        }
+        MDC.put(RESPONSE_STATUS_MDC, response.status.toString())
+        MDC.put(RESPONSE_HEADERS_MDC, getHeaders(response))
+        MDC.put(POD_IP_MDC, "POD_IP")
+        MDC.put(RESPONSE_BODY_MDC, getResponseBody(response))
+
+        val logResponse = createLogResponseModel()
+        logger.info(formatService.formatResponse(logResponse, logProperties.enableLogStacktrace))
     }
 
-    private fun createLogResponseModelError(
-        request: ContentCachingRequestWrapper,
-        response: ContentCachingResponseWrapper
-    ): LogError {
-        return LogError(
+    private fun createLogResponseModel(): LogResponse {
+        val logResponse = LogResponse(
             MDC.get(REQUEST_ID_MDC),
-            request.method,
-            response.status.toString(),
-            request.requestURI,
-            getHeaders(response),
+            MDC.get(METHOD_MDC),
+            MDC.get(RESPONSE_STATUS_MDC),
+            MDC.get(REQUEST_URI_MDC),
+            MDC.get(RESPONSE_HEADERS_MDC),
             MDC.get(DURATION_REQUEST_MDC),
             MDC.get(TOKEN_INFO_MDC) ?: "unknown",
-            "POD_IP",
-            body = getResponseBody(response),
+            MDC.get(POD_IP_MDC),
+            MDC.get(RESPONSE_BODY_MDC),
             stackTrace = getStackTrace(),
         )
+        MDC.clear()
+        return logResponse
     }
 
-    private fun createLogResponseModel(
-        request: ContentCachingRequestWrapper,
-        response: ContentCachingResponseWrapper
-    ): LogResponse {
-        return LogResponse(
-            MDC.get(REQUEST_ID_MDC),
-            request.method,
-            response.status.toString(),
-            request.requestURI,
-            getHeaders(response),
-            MDC.get(DURATION_REQUEST_MDC),
-            MDC.get(TOKEN_INFO_MDC) ?: "unknown",
-            "POD_IP",
-            body = getResponseBody(response),
-        )
-    }
-
-    private fun getHeaders(response: ContentCachingResponseWrapper): List<MutableMap<String, List<String>>> {
+    private fun getHeaders(response: ContentCachingResponseWrapper): String {
         val headerNamesList = response.headerNames.toList()
         return headerNamesList.map { nameHeader ->
             val headerValue = response.getHeaders(nameHeader).toList()
             mutableMapOf(nameHeader to headerValue)
-        }
+        }.toString()
     }
 
     private fun getResponseBody(response: ContentCachingResponseWrapper): String {
@@ -104,8 +91,8 @@ class ResponseLogHelperImpl @Autowired constructor(
                 || response.contentType.contains(MediaType.APPLICATION_FORM_URLENCODED_VALUE)))
     }
 
-    private fun getStackTrace(): String {
-        var trace = MDC.get(STACKTRACE_MDC) ?: "unknown"
+    private fun getStackTrace(): String? {
+        var trace = MDC.get(STACKTRACE_MDC) ?: return null
         val maxLengthStacktrace = logProperties.lengthStacktrace
         if (trace.length > maxLengthStacktrace) {
             trace = trace.substring(0, maxLengthStacktrace)
