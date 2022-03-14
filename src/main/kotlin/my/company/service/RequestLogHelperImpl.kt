@@ -51,10 +51,9 @@ class RequestLogHelperImpl @Autowired constructor(
 
         val logRequest = LogRequest(
             requestId,
-            applicationName,
             request.method,
             request.requestURI,
-            request.getHeader(HttpHeaders.USER_AGENT)?: "unknown",
+            request.getHeader(HttpHeaders.USER_AGENT) ?: "unknown",
             request.getHeader(DEVICE_ID_HEADER) ?: "unknown",
             token,
             getHeaders(request),
@@ -62,7 +61,6 @@ class RequestLogHelperImpl @Autowired constructor(
             if (isIncludeFormData(request)) getPartFileName(request.parts) else listOf(),
             tokenInfo = checkOrGetTokenInfo(token),
             requestIp = request.remoteAddr,
-            profile = profile,
             body = getRequestBody(request)
         )
         if (logProperties.enableLogRequest) logger.info(formatService.formatRequest(logRequest))

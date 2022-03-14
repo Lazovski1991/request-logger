@@ -1,10 +1,7 @@
 package my.company.model
 
-import java.time.LocalDateTime
-
 data class LogRequest(
     val requestId: String,
-    val applicationName: String,
     val method: String,
     val uri: String,
     val userAgent: String,
@@ -15,7 +12,5 @@ data class LogRequest(
     var fileUpload: List<String>,
     val tokenInfo: String,
     val requestIp: String,
-    val profile: String?,
-    val time: LocalDateTime = LocalDateTime.now(),
     val body: String
 )

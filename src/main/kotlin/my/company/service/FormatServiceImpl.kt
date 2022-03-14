@@ -11,7 +11,6 @@ class FormatServiceImpl : FormatService {
     override fun formatRequest(logRequest: LogRequest): String {
         val stringBuilder = StringBuilder()
         stringBuilder.append("\n------------------------------>\n")
-        stringBuilder.append("APPLICATION: ${logRequest.applicationName}\n")
         stringBuilder.append("REQUEST-ID: ${logRequest.requestId}\n")
         stringBuilder.append("METHOD: ${logRequest.method}\n")
         stringBuilder.append("URI: ${logRequest.uri}\n")
@@ -23,8 +22,6 @@ class FormatServiceImpl : FormatService {
         stringBuilder.append("PARAMS: ${logRequest.params}\n")
         stringBuilder.append("FILE_NAME_UPLOAD: ${logRequest.fileUpload}\n")
         stringBuilder.append("REQUEST-IP: ${logRequest.requestIp}\n")
-        stringBuilder.append("PROFILE: ${logRequest.profile}\n")
-        stringBuilder.append("TIME: ${logRequest.time}\n")
         stringBuilder.append("BODY: \n${logRequest.body}")
         stringBuilder.append("\n<------------------------------>\n")
         return stringBuilder.toString()
@@ -46,15 +43,12 @@ class FormatServiceImpl : FormatService {
     private fun baseFormatResponse(responseModel: AbstractResponse): StringBuilder {
         val stringBuilder = StringBuilder()
         stringBuilder.append("\n------------------------------>>>\n")
-        stringBuilder.append("APPLICATION: ${responseModel.applicationName}\n")
         stringBuilder.append("REQUEST-ID: ${responseModel.requestId}\n")
         stringBuilder.append("METHOD: ${responseModel.method}\n")
         stringBuilder.append("URI: ${responseModel.uri}\n")
         stringBuilder.append("DURATION_REQUEST: ${responseModel.duration} ms\n")
         stringBuilder.append("TOKEN_INFO: ${responseModel.tokenInfo}\n")
         stringBuilder.append("HEADERS: ${responseModel.headers}\n")
-        stringBuilder.append("PROFILE: ${responseModel.profile}\n")
-        stringBuilder.append("TIME: ${responseModel.time}\n")
         stringBuilder.append("BODY: ${responseModel.body}")
         return stringBuilder
     }

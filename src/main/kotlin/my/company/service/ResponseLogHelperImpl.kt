@@ -3,9 +3,7 @@ package my.company.service
 import my.company.config.LogProperties
 import my.company.model.LogError
 import my.company.model.LogResponse
-import my.company.util.Constants.APPLICATION_NAME
 import my.company.util.Constants.DURATION_REQUEST_MDC
-import my.company.util.Constants.PROFILE_MDC
 import my.company.util.Constants.REQUEST_ID_MDC
 import my.company.util.Constants.STACKTRACE_MDC
 import my.company.util.Constants.TIME_START_REQUEST
@@ -51,14 +49,12 @@ class ResponseLogHelperImpl @Autowired constructor(
     ): LogError {
         return LogError(
             MDC.get(REQUEST_ID_MDC),
-            MDC.get(APPLICATION_NAME),
             request.method,
             response.status.toString(),
             request.requestURI,
             getHeaders(response),
             MDC.get(DURATION_REQUEST_MDC),
             MDC.get(TOKEN_INFO_MDC) ?: "unknown",
-            MDC.get(PROFILE_MDC),
             "POD_IP",
             body = getResponseBody(response),
             stackTrace = getStackTrace(),
@@ -71,14 +67,12 @@ class ResponseLogHelperImpl @Autowired constructor(
     ): LogResponse {
         return LogResponse(
             MDC.get(REQUEST_ID_MDC),
-            MDC.get(APPLICATION_NAME),
             request.method,
             response.status.toString(),
             request.requestURI,
             getHeaders(response),
             MDC.get(DURATION_REQUEST_MDC),
             MDC.get(TOKEN_INFO_MDC) ?: "unknown",
-            MDC.get(PROFILE_MDC),
             "POD_IP",
             body = getResponseBody(response),
         )

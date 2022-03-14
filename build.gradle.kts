@@ -52,7 +52,7 @@ publishing {
     publications {
         create<MavenPublication>("maven") {
             from(components["java"])
-            version = "1.0.3"
+            version = "1.0.4t"
         }
     }
 }
