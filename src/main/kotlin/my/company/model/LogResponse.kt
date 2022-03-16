@@ -9,6 +9,6 @@ data class LogResponse(
     val duration: String,
     val tokenInfo: String,
     val podIp: String,
-    val body: String,
+    val body: String?,
     val stackTrace: String?
 )

@@ -13,7 +13,14 @@ class InfoExtractFromTokenServiceImpl @Autowired constructor(
     val logProperties: LogProperties,
     val jwtParse: ParseTokenUtilService,
 ) : InfoExtractFromTokenService {
-    override fun getInfoFromToken(token: String): String {
+    override fun checkOrGetTokenInfo(token: String): String {
+        return if (logProperties.fieldNameToken.isNotEmpty()
+            && token != "unknown"
+        ) getInfoFromToken(token) else "unknown"
+    }
+
+
+    fun getInfoFromToken(token: String): String {
         val extractInfo = mutableListOf<TokenInfo>()
         try {
             logProperties.fieldNameToken.forEach {
@@ -32,6 +39,7 @@ class InfoExtractFromTokenServiceImpl @Autowired constructor(
         val formatString = StringBuilder()
         formatString.append("{")
         extractInfo.forEach {
+            MDC.put("user.${it.fieldName}", it.fieldValue)
             formatString.append("\n\t${it.fieldName} = ${it.fieldValue},")
         }
         formatString.substring(0, formatString.length - 1)

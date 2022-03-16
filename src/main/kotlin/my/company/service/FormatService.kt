@@ -5,5 +5,5 @@ import my.company.model.LogResponse
 
 interface FormatService {
     fun formatRequest(logRequest: LogRequest): String
-    fun formatResponse(logResponse: LogResponse, enableLogStacktrace: Boolean): String
+    fun formatResponse(logResponse: LogResponse): String
 }

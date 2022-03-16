@@ -1,6 +1,5 @@
 package my.company.service
 
-import my.company.config.LogProperties
 import my.company.model.LogResponse
 import my.company.util.Constants.DURATION_REQUEST_MDC
 import my.company.util.Constants.METHOD_MDC
@@ -22,11 +21,12 @@ import org.springframework.stereotype.Service
 import org.springframework.web.util.ContentCachingRequestWrapper
 import org.springframework.web.util.ContentCachingResponseWrapper
 import java.nio.charset.Charset
+import java.util.function.Function
+import java.util.stream.Collectors
 import javax.servlet.http.HttpServletResponse
 
 @Service
 class ResponseLogHelperImpl @Autowired constructor(
-    val logProperties: LogProperties,
     val formatService: FormatService
 ) : ResponseLogHelper {
     companion object {
@@ -41,11 +41,12 @@ class ResponseLogHelperImpl @Autowired constructor(
         MDC.put(DURATION_REQUEST_MDC, durationRequest.toString())
         MDC.put(RESPONSE_STATUS_MDC, response.status.toString())
         MDC.put(RESPONSE_HEADERS_MDC, getHeaders(response))
-        MDC.put(POD_IP_MDC, "POD_IP")
+        MDC.put(POD_IP_MDC, "POD_IP")//todo
         MDC.put(RESPONSE_BODY_MDC, getResponseBody(response))
 
         val logResponse = createLogResponseModel()
-        logger.info(formatService.formatResponse(logResponse, logProperties.enableLogStacktrace))
+        logger.info(formatService.formatResponse(logResponse))
+        MDC.clear()
     }
 
     private fun createLogResponseModel(): LogResponse {
@@ -59,9 +60,9 @@ class ResponseLogHelperImpl @Autowired constructor(
             MDC.get(TOKEN_INFO_MDC) ?: "unknown",
             MDC.get(POD_IP_MDC),
             MDC.get(RESPONSE_BODY_MDC),
-            stackTrace = getStackTrace(),
+            MDC.get(STACKTRACE_MDC)
         )
-        MDC.clear()
+        MDC.getCopyOfContextMap()
         return logResponse
     }
 
@@ -73,7 +74,7 @@ class ResponseLogHelperImpl @Autowired constructor(
         }.toString()
     }
 
-    private fun getResponseBody(response: ContentCachingResponseWrapper): String {
+    private fun getResponseBody(response: ContentCachingResponseWrapper): String? {
         val buf = response.contentAsByteArray
         if (isTypeJson(response) && buf.isNotEmpty()) {
             try {
@@ -82,21 +83,12 @@ class ResponseLogHelperImpl @Autowired constructor(
                 RequestLogHelperImpl.logger.error("error in reading request body")
             }
         }
-        return ""
+        return null
     }
 
     private fun isTypeJson(response: HttpServletResponse): Boolean {
         return (!response.contentType.isNullOrBlank()
                 && (response.contentType.contains(MediaType.APPLICATION_JSON_VALUE)
                 || response.contentType.contains(MediaType.APPLICATION_FORM_URLENCODED_VALUE)))
-    }
-
-    private fun getStackTrace(): String? {
-        var trace = MDC.get(STACKTRACE_MDC) ?: return null
-        val maxLengthStacktrace = logProperties.lengthStacktrace
-        if (trace.length > maxLengthStacktrace) {
-            trace = trace.substring(0, maxLengthStacktrace)
-        }
-        return trace
     }
 }

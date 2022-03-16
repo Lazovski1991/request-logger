@@ -9,8 +9,6 @@ data class LogProperties(
     var tokenHeaderName: String?,
     var fieldNameToken: List<String> = listOf(),
     var filePartType: List<String> = listOf("image/jpeg", "image/png", "image/jpg"), //список типов файлов имена которых логируем
-    var enableLogStacktrace: Boolean = true,
-    var lengthStacktrace: Int = 10000,
     var enableLogRequest: Boolean = true,
     var enableLogResponse: Boolean = true
 )

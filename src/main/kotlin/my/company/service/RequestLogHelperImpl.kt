@@ -65,7 +65,6 @@ class RequestLogHelperImpl @Autowired constructor(
         MDC.put(REQUEST_HEADERS_MDC, getHeaders(request))
         MDC.put(PARAM_MDC, getParam(request))
         MDC.put(FILE_UPLOAD_MDC, if (isIncludeFormData(request)) getPartFileName(request.parts).toString() else "")
-        MDC.put(TOKEN_INFO_MDC, checkOrGetTokenInfo(MDC.get(TOKEN_MDC)))
         MDC.put(REQUEST_IP_MDC, request.remoteAddr)
         MDC.put(REQUEST_BODY_MDC, getRequestBody(request))
 
@@ -83,7 +82,7 @@ class RequestLogHelperImpl @Autowired constructor(
             MDC.get(REQUEST_HEADERS_MDC),
             MDC.get(PARAM_MDC),
             MDC.get(FILE_UPLOAD_MDC),
-            MDC.get(TOKEN_INFO_MDC),
+            infoExtractFromTokenService.checkOrGetTokenInfo(MDC.get(TOKEN_MDC)),
             MDC.get(REQUEST_IP_MDC),
             MDC.get(REQUEST_BODY_MDC)
         )
@@ -96,12 +95,6 @@ class RequestLogHelperImpl @Autowired constructor(
             extractToken = request.getHeader(logProperties.tokenHeaderName)
         }
         return extractToken ?: "unknown"
-    }
-
-    private fun checkOrGetTokenInfo(token: String): String {
-        return if (logProperties.fieldNameToken.isNotEmpty()
-            && token != "unknown"
-        ) infoExtractFromTokenService.getInfoFromToken(token) else "unknown"
     }
 
     private fun getPartFileName(parts: MutableCollection<Part>): List<String> {

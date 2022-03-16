@@ -25,19 +25,24 @@ class FormatServiceImpl : FormatService {
         return stringBuilder.toString()
     }
 
-    override fun formatResponse(logResponse: LogResponse, enableLogStacktrace: Boolean): String {
+    override fun formatResponse(logResponse: LogResponse): String {
         val stringBuilder = StringBuilder()
         stringBuilder.append("\n------------------------------>>>\n")
         stringBuilder.append("REQUEST-ID: ${logResponse.requestId}\n")
         stringBuilder.append("METHOD: ${logResponse.method}\n")
+        stringBuilder.append("STATUS: ${logResponse.status}\n")
         stringBuilder.append("URI: ${logResponse.uri}\n")
         stringBuilder.append("DURATION_REQUEST: ${logResponse.duration} ms\n")
         stringBuilder.append("TOKEN_INFO: ${logResponse.tokenInfo}\n")
+        stringBuilder.append("TOKEN_INFO: ${logResponse.podIp}\n")
         stringBuilder.append("HEADERS: ${logResponse.headers}\n")
-        stringBuilder.append("BODY: ${logResponse.body}")
-        if (logResponse.stackTrace != null && enableLogStacktrace) {
+
+        if (logResponse.body != null)
+            stringBuilder.append("BODY: ${logResponse.body}")
+
+        if (logResponse.stackTrace != null)
             stringBuilder.append("STACKTRACE: -->\n ${logResponse.stackTrace}")
-        }
+
         stringBuilder.append("\n<------------------------------>\n")
         return stringBuilder.toString()
     }
