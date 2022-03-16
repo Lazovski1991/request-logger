@@ -32,7 +32,7 @@ class FormatServiceImpl : FormatService {
         stringBuilder.append("METHOD: ${logResponse.method}\n")
         stringBuilder.append("STATUS: ${logResponse.status}\n")
         stringBuilder.append("URI: ${logResponse.uri}\n")
-        stringBuilder.append("DURATION_REQUEST: ${logResponse.duration} ms\n")
+        stringBuilder.append("DURATION_REQUEST: ${logResponse.duration}\n")
         stringBuilder.append("TOKEN_INFO: ${logResponse.tokenInfo}\n")
         stringBuilder.append("TOKEN_INFO: ${logResponse.podIp}\n")
         stringBuilder.append("HEADERS: ${logResponse.headers}\n")

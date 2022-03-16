@@ -21,8 +21,6 @@ import org.springframework.stereotype.Service
 import org.springframework.web.util.ContentCachingRequestWrapper
 import org.springframework.web.util.ContentCachingResponseWrapper
 import java.nio.charset.Charset
-import java.util.function.Function
-import java.util.stream.Collectors
 import javax.servlet.http.HttpServletResponse
 
 @Service
@@ -38,7 +36,7 @@ class ResponseLogHelperImpl @Autowired constructor(
         response: ContentCachingResponseWrapper
     ) {
         val durationRequest = System.currentTimeMillis() - request.getAttribute(TIME_START_REQUEST).toString().toLong()
-        MDC.put(DURATION_REQUEST_MDC, durationRequest.toString())
+        MDC.put(DURATION_REQUEST_MDC, "$durationRequest ms")
         MDC.put(RESPONSE_STATUS_MDC, response.status.toString())
         MDC.put(RESPONSE_HEADERS_MDC, getHeaders(response))
         MDC.put(POD_IP_MDC, "POD_IP")//todo
