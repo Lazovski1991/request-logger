@@ -3,9 +3,9 @@ package my.company.util
 import my.company.util.Constants.STACKTRACE_MDC
 import org.slf4j.MDC
 
-object Util {
+object LogUtil {
     //для того чтоб залогировать стектрейс, в хендлере вызываем этот метод
-    fun stackTraceToString(e: Throwable, maxLengthStacktrace: Int=10000): String? {
+    fun stackTraceLog(e: Throwable, maxLengthStacktrace: Int=10000): String? {
         val sb = StringBuilder()
         for (element in e.stackTrace) {
             sb.append(element.toString())
