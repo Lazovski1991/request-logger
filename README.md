@@ -25,14 +25,14 @@ allprojects {
 <dependency>
 	 <groupId>com.github.Lazovski1991</groupId>
 	 <artifactId>request-logger</artifactId>
-	 <version>1.0.2</version>
+	 <version>2.0.0-beta</version>
 </dependency>
 ````
 
 Для gradle:
 ````
 dependencies {
-   implementation 'com.github.Lazovski1991:request-logger:1.0.2'
+   implementation 'com.github.Lazovski1991:request-logger:2.0.0-beta'
 }
 ```` 
 ### Настройка yml
