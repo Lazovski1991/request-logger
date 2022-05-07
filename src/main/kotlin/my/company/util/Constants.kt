@@ -22,8 +22,6 @@ object Constants {
     const val REQUEST_IP_MDC: String = "Request_Ip"
     const val REQUEST_BODY_MDC: String = "Request_Body"
     const val RESPONSE_STATUS_MDC: String = "Response_Status"
-    const val RESPONSE_HEADERS_MDC: String = "Response_Headers"
-    const val POD_IP_MDC: String = "Pod_Ip"
+    const val POD_NAME_MDC: String = "Pod_Name"
     const val RESPONSE_BODY_MDC: String = "Response_Body"
-
 }

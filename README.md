@@ -25,14 +25,14 @@ allprojects {
 <dependency>
 	 <groupId>com.github.Lazovski1991</groupId>
 	 <artifactId>request-logger</artifactId>
-	 <version>2.0.0-beta</version>
+	 <version>2.1.0</version>
 </dependency>
 ````
 
 Для gradle:
 ````
 dependencies {
-   implementation 'com.github.Lazovski1991:request-logger:2.0.0-beta'
+   implementation 'com.github.Lazovski1991:request-logger:2.1.0'
 }
 ```` 
 ### Настройка yml
@@ -42,8 +42,10 @@ logging:
   config: classpath:logback-spring.xml
   service:
     enable: true
-    token-header-name: testHeader
-    field-name-token: ["userId", "userName", "email"]
+    auth:
+        type: jwt
+        token-header-name: testHeader
+        field-name-token: ["userId", "userName", "email"]
     url-exclude: ["/tests"]
     file-part-type: ["application/octet-stream", "image/jpeg"]
     enable-log-stacktrace: true
@@ -58,14 +60,15 @@ jwt:
 ```
 * logging.config - указывает на файл xml с настройками логирования logback
 * logging.enable - включение логирования запросов и ответоа(по умолчанию true)
-* logging.token-header-name - заголовок в котором приходит токет авторизации(необязательно)
-* logging.field-name-token - поля которые необходимо достать из токена(необязательно)
+* logging.auth.type - два типа, keycloak и jwt(если не заполнить будет jwt)
+* logging.auth.token-header-name - заголовок в котором приходит токет авторизации(необязательно)
+* logging.auth.field-name-token - поля которые необходимо достать из токена(необязательно)(тип keycloak пока умеет только три поля ["userId", "username", "email"])
 * logging.url-exclude - исключает эти url из логирования
 * logging.file-part-type - тип файлов, при загрузке названия которых выводить в логи(по умолчанию это "image/jpeg", "image/png", "image/jpg")
 * logging.enable-log-request - включает логирование запросов(по умолчанию true)
 * logging.enable-log-response - включает логирование ответов(по умолчанию true)
 
-Отдельно стоит упомянуть про jwt.parse.service.secret-key. В эту библиотеку включена минибиблиотека для парсинга джейсона и извлечения из него информации. Это необходимо для того чтобы в логи можно было вывести какую-нибудь информацию о user (и не только). Если задано logging.token-header-name и field-name-token то необходимо задать секретный ключ в этой настройке, иначе в логи будет сыпаться исключение с просьбой его добавить. Если нет необходимость извлекать какие-то поля из джейсона, эти поля необязательны.
+Отдельно стоит упомянуть про jwt.parse.service.secret-key. В эту библиотеку включена минибиблиотека для парсинга джейсона и извлечения из него информации. Это необходимо для того чтобы в логи можно было вывести какую-нибудь информацию о user (и не только). Если задано logging.token-header-name и field-name-token то необходимо задать секретный ключ в этой настройке, иначе в логи будет сыпаться исключение с просьбой его добавить. Если нет необходимость извлекать какие-то поля из джейсона, эти поля необязательны. Для типа keycloak это поле не нужно
 ### Логирование стектрейса
 Для логирования стектрейса необходимо в ExceptionHandler перед тем как отдать ответь, вызвать метод stackTraceLog статического класса LogUtil и передать в качестве параметра исключение и длину стектрейса который мы хотим что залогировался. Второй параметр не обязательный, по умолчанию длина лога 10000 символов.
 
@@ -110,13 +113,13 @@ spring:
 * Device_id (из заголовка Device-Id запроса)
 * File_Name_Upload имена загружаемых файлов
 * Method запроса и ответа
-* Params запроса и ответа
-* Pod_Ip который обработал запроса(пока не работает)
+* Params запроса
+* Pod_Name который обработал запроса
 * Request_Body тело запроса 
 * Request_Duration продолжительность обработки запроса
 * Request_Id уникальный id запроса
 * Request_Uri запроса
-* Headers запроса и ответа
+* Headers запроса(кроме заголовка в котором токен, т.к. он есть отдельно)
 * Response_Status ответа
 * Token аутентификации
 * User_Agent запроса

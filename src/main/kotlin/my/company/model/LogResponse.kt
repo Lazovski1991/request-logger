@@ -5,10 +5,9 @@ data class LogResponse(
     val method: String,
     val status: String,
     val uri: String,
-    val headers: String,
     val duration: String,
     val tokenInfo: String,
-    val podIp: String,
+    val podName: String,
     val body: String?,
     val stackTrace: String?
 )

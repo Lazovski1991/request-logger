@@ -14,6 +14,7 @@ class FormatServiceImpl : FormatService {
         stringBuilder.append("URI: ${logRequest.uri}\n")
         stringBuilder.append("USER_AGENT: ${logRequest.userAgent}\n")
         stringBuilder.append("DEVICE-ID: ${logRequest.deviceId}\n")
+        stringBuilder.append("POD_NAME: ${logRequest.podName}\n")
         stringBuilder.append("AUTH-TOKEN: ${logRequest.token}\n")
         stringBuilder.append("TOKEN_INFO: ${logRequest.tokenInfo}\n")
         stringBuilder.append("HEADERS: ${logRequest.headers}\n")
@@ -34,14 +35,13 @@ class FormatServiceImpl : FormatService {
         stringBuilder.append("URI: ${logResponse.uri}\n")
         stringBuilder.append("DURATION_REQUEST: ${logResponse.duration}\n")
         stringBuilder.append("TOKEN_INFO: ${logResponse.tokenInfo}\n")
-        stringBuilder.append("TOKEN_INFO: ${logResponse.podIp}\n")
-        stringBuilder.append("HEADERS: ${logResponse.headers}\n")
+        stringBuilder.append("POD_NAME: ${logResponse.podName}\n")
 
         if (logResponse.body != null)
             stringBuilder.append("BODY: ${logResponse.body}")
 
         if (logResponse.stackTrace != null)
-            stringBuilder.append("STACKTRACE: -->\n ${logResponse.stackTrace}")
+            stringBuilder.append("\nSTACKTRACE: -->\n ${logResponse.stackTrace}")
 
         stringBuilder.append("\n<------------------------------>\n")
         return stringBuilder.toString()

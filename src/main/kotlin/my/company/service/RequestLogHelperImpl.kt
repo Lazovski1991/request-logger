@@ -6,16 +6,16 @@ import my.company.util.Constants.APPLICATION_NAME
 import my.company.util.Constants.DEVICE_ID_HEADER
 import my.company.util.Constants.DEVICE_ID_MDC
 import my.company.util.Constants.FILE_UPLOAD_MDC
-import my.company.util.Constants.REQUEST_HEADERS_MDC
 import my.company.util.Constants.METHOD_MDC
 import my.company.util.Constants.PARAM_MDC
+import my.company.util.Constants.POD_NAME_MDC
 import my.company.util.Constants.PROFILE_MDC
 import my.company.util.Constants.REQUEST_BODY_MDC
+import my.company.util.Constants.REQUEST_HEADERS_MDC
 import my.company.util.Constants.REQUEST_ID_HEADER
 import my.company.util.Constants.REQUEST_ID_MDC
 import my.company.util.Constants.REQUEST_IP_MDC
 import my.company.util.Constants.REQUEST_URI_MDC
-import my.company.util.Constants.TOKEN_INFO_MDC
 import my.company.util.Constants.TOKEN_MDC
 import my.company.util.Constants.USER_AGENT_MDC
 import org.slf4j.Logger
@@ -27,6 +27,7 @@ import org.springframework.http.HttpHeaders
 import org.springframework.http.MediaType
 import org.springframework.stereotype.Service
 import org.springframework.web.util.ContentCachingRequestWrapper
+import java.net.InetAddress
 import java.nio.charset.Charset
 import java.util.*
 import javax.servlet.http.HttpServletRequest
@@ -67,7 +68,7 @@ class RequestLogHelperImpl @Autowired constructor(
         MDC.put(FILE_UPLOAD_MDC, if (isIncludeFormData(request)) getPartFileName(request.parts).toString() else "")
         MDC.put(REQUEST_IP_MDC, request.remoteAddr)
         MDC.put(REQUEST_BODY_MDC, getRequestBody(request))
-
+        MDC.put(POD_NAME_MDC, InetAddress.getLocalHost().hostName ?: "unknown")
         log()
     }
 
@@ -78,6 +79,7 @@ class RequestLogHelperImpl @Autowired constructor(
             MDC.get(REQUEST_URI_MDC),
             MDC.get(USER_AGENT_MDC),
             MDC.get(DEVICE_ID_MDC),
+            MDC.get(POD_NAME_MDC),
             MDC.get(TOKEN_MDC),
             MDC.get(REQUEST_HEADERS_MDC),
             MDC.get(PARAM_MDC),
@@ -91,8 +93,8 @@ class RequestLogHelperImpl @Autowired constructor(
 
     private fun getToken(request: ContentCachingRequestWrapper): String {
         var extractToken: String? = null
-        if (logProperties.tokenHeaderName != null) {
-            extractToken = request.getHeader(logProperties.tokenHeaderName)
+        if (logProperties.auth.tokenHeaderName != null) {
+            extractToken = request.getHeader(logProperties.auth.tokenHeaderName)
         }
         return extractToken ?: "unknown"
     }
@@ -119,10 +121,12 @@ class RequestLogHelperImpl @Autowired constructor(
 
     private fun getHeaders(request: HttpServletRequest): String {
         val headerNamesList = request.headerNames.toList()
-        return headerNamesList.map { nameHeader ->
-            val headerValue = request.getHeaders(nameHeader).toList()
-            mutableMapOf(nameHeader to headerValue)
-        }.toString()
+        return headerNamesList
+            .filter { !it.equals(logProperties.auth.tokenHeaderName, true) }
+            .map { nameHeader ->
+                val headerValue = request.getHeaders(nameHeader).toList()
+                mutableMapOf(nameHeader to headerValue)
+            }.toString()
     }
 
     private fun getParam(request: HttpServletRequest): String {

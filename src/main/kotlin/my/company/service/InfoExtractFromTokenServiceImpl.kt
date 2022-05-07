@@ -1,5 +1,6 @@
 package my.company.service
 
+import my.company.config.AuthType
 import my.company.config.LogProperties
 import my.company.jwtparselib.service.ParseTokenUtilService
 import my.company.model.TokenInfo
@@ -11,20 +12,32 @@ import org.springframework.stereotype.Service
 @Service
 class InfoExtractFromTokenServiceImpl @Autowired constructor(
     val logProperties: LogProperties,
-    val jwtParse: ParseTokenUtilService,
+    val jwtParse: ParseTokenUtilService
 ) : InfoExtractFromTokenService {
+
     override fun checkOrGetTokenInfo(token: String): String {
-        return if (logProperties.fieldNameToken.isNotEmpty()
-            && token != "unknown"
-        ) getInfoFromToken(token) else "unknown"
+        return when (logProperties.auth.type) {
+            AuthType.JWT -> {
+                if (logProperties.auth.fieldNameToken.isNotEmpty()
+                    && token != "unknown"
+                ) getInfoFromToken(token, false) else "unknown"
+            }
+            AuthType.KEYCLOAK -> {
+                if (logProperties.auth.fieldNameToken.isNotEmpty()
+                    && token != "unknown"
+                ) getInfoFromToken(token, true) else "unknown"
+            }
+            else -> {
+                "unknown";
+            }
+        }
     }
 
-
-    fun getInfoFromToken(token: String): String {
+    fun getInfoFromToken(token: String, keyloak: Boolean): String {
         val extractInfo = mutableListOf<TokenInfo>()
         try {
-            logProperties.fieldNameToken.forEach {
-                extractInfo.add(TokenInfo(it, jwtParse.getValueFieldFromToken(token, it)))
+            logProperties.auth.fieldNameToken.forEach {
+                extractInfo.add(TokenInfo(it, jwtParse.getValueFieldFromToken(token, it, keyloak)))
             }
         } catch (e: NullPointerException) {
             println(e.message)
@@ -42,9 +55,6 @@ class InfoExtractFromTokenServiceImpl @Autowired constructor(
             MDC.put("user.${it.fieldName}", it.fieldValue)
             formatString.append("\n\t${it.fieldName} = ${it.fieldValue},")
         }
-        formatString.substring(0, formatString.length - 1)
-        formatString.append("\n}")
-
-        return formatString.toString()
+        return "${formatString.substring(0, formatString.length - 1)}\n}"
     }
 }

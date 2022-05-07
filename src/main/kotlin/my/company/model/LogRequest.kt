@@ -6,6 +6,7 @@ data class LogRequest(
     val uri: String,
     val userAgent: String,
     val deviceId: String,
+    val podName: String,
     val token: String,
     val headers: String,
     val params: String,

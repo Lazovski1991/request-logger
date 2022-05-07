@@ -6,8 +6,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties
 data class LogProperties(
     var enable: Boolean = true,
     var urlExclude: MutableList<String> = mutableListOf(),
-    var tokenHeaderName: String?,
-    var fieldNameToken: List<String> = listOf(),
+    var auth: AuthInfo = AuthInfo(),
     var filePartType: List<String> = listOf("image/jpeg", "image/png", "image/jpg"), //список типов файлов имена которых логируем
     var enableLogRequest: Boolean = true,
     var enableLogResponse: Boolean = true

@@ -10,7 +10,7 @@ plugins {
 }
 
 group = "my.company"
-version = "2.0.0-beta"
+version = "2.1.0"
 java.sourceCompatibility = JavaVersion.VERSION_1_8
 
 repositories {
@@ -23,8 +23,8 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-web")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     kapt("org.springframework.boot:spring-boot-configuration-processor")
-    api("com.github.Lazovski1991:jwt-parse-lib:1.0-beta2")
-    implementation("net.logstash.logback:logstash-logback-encoder:7.0.1")
+    api("com.github.Lazovski1991:jwt-parse-lib:2.0.2")
+    implementation("net.logstash.logback:logstash-logback-encoder:7.1.1")
 }
 
 tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
@@ -52,7 +52,7 @@ publishing {
     publications {
         create<MavenPublication>("maven") {
             from(components["java"])
-            version = "2.0.0-beta"
+            version = "2.1.0"
         }
     }
 }
