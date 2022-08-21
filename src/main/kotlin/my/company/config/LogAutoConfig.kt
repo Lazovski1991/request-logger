@@ -1,9 +1,8 @@
 package my.company.config
 
 import my.company.filter.LogFilter
-import my.company.service.CheckUrlService
-import my.company.service.RequestLogHelper
-import my.company.service.ResponseLogHelper
+import my.company.jwtparselib.service.ParseTokenUtilService
+import my.company.service.*
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
@@ -26,4 +25,30 @@ class LogAutoConfig {
         @Autowired checkUrlService: CheckUrlService
     ): LogFilter =
         LogFilter(logProperties, requestLogHelper, responseLogHelper, checkUrlService)
+
+    @Bean
+    fun createCheckUrlServiceImpl(@Autowired logProperties: LogProperties): CheckUrlService =
+        CheckUrlServiceImpl(logProperties)
+
+    @Bean
+    fun createFormatService(): FormatService = FormatServiceImpl()
+
+    @Bean
+    fun createInfoExtractFromTokenService(
+        @Autowired logProperties: LogProperties,
+        @Autowired parseTokenUtilService: ParseTokenUtilService
+    ): InfoExtractFromTokenServiceImpl =
+        InfoExtractFromTokenServiceImpl(logProperties, parseTokenUtilService)
+
+    @Bean
+    fun createRequestLogHelper(
+        @Autowired logProperties: LogProperties,
+        @Autowired infoExtractFromTokenServiceImpl: InfoExtractFromTokenServiceImpl,
+        @Autowired formatService: FormatService
+    ): RequestLogHelper =
+        RequestLogHelperImpl(logProperties, infoExtractFromTokenServiceImpl, formatService)
+
+    @Bean
+    fun createResponseLogHelper(@Autowired formatService: FormatService): ResponseLogHelper =
+        ResponseLogHelperImpl(formatService)
 }

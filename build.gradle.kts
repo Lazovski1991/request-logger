@@ -10,7 +10,7 @@ plugins {
 }
 
 group = "my.company"
-version = "2.1.0"
+version = "2.2.0"
 java.sourceCompatibility = JavaVersion.VERSION_1_8
 
 repositories {
@@ -52,7 +52,7 @@ publishing {
     publications {
         create<MavenPublication>("maven") {
             from(components["java"])
-            version = "2.1.0"
+            version = "2.2.0"
         }
     }
 }

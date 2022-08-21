@@ -4,6 +4,7 @@ data class LogResponse(
     val requestId: String,
     val method: String,
     val status: String,
+    val marker: String,
     val uri: String,
     val duration: String,
     val tokenInfo: String,

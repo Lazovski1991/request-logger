@@ -7,6 +7,7 @@ import my.company.util.Constants.POD_NAME_MDC
 import my.company.util.Constants.REQUEST_ID_MDC
 import my.company.util.Constants.REQUEST_URI_MDC
 import my.company.util.Constants.RESPONSE_BODY_MDC
+import my.company.util.Constants.RESPONSE_MARKER_MDC
 import my.company.util.Constants.RESPONSE_STATUS_MDC
 import my.company.util.Constants.STACKTRACE_MDC
 import my.company.util.Constants.TIME_START_REQUEST
@@ -16,15 +17,13 @@ import org.slf4j.LoggerFactory
 import org.slf4j.MDC
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.MediaType
-import org.springframework.stereotype.Service
 import org.springframework.web.util.ContentCachingRequestWrapper
 import org.springframework.web.util.ContentCachingResponseWrapper
 import java.nio.charset.Charset
 import javax.servlet.http.HttpServletResponse
 
-@Service
 class ResponseLogHelperImpl @Autowired constructor(
-    val formatService: FormatService
+    private val formatService: FormatService
 ) : ResponseLogHelper {
     companion object {
         val logger: Logger = LoggerFactory.getLogger("RESPONSE")
@@ -49,6 +48,7 @@ class ResponseLogHelperImpl @Autowired constructor(
             MDC.get(REQUEST_ID_MDC),
             MDC.get(METHOD_MDC),
             MDC.get(RESPONSE_STATUS_MDC),
+            MDC.get(RESPONSE_MARKER_MDC) ?: "pipe.succ",
             MDC.get(REQUEST_URI_MDC),
             MDC.get(DURATION_REQUEST_MDC),
             MDC.get(TOKEN_INFO_MDC) ?: "unknown",
@@ -64,7 +64,7 @@ class ResponseLogHelperImpl @Autowired constructor(
         val buf = response.contentAsByteArray
         if (isTypeJson(response) && buf.isNotEmpty()) {
             try {
-                return String(buf, 0, buf.size, Charset.forName(response.characterEncoding))
+                return String(buf, 0, buf.size, Charset.forName("UTF-8"))
             } catch (e: Exception) {
                 RequestLogHelperImpl.logger.error("error in reading request body")
             }

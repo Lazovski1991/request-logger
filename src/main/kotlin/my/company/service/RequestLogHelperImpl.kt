@@ -25,7 +25,6 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.http.HttpHeaders
 import org.springframework.http.MediaType
-import org.springframework.stereotype.Service
 import org.springframework.web.util.ContentCachingRequestWrapper
 import java.net.InetAddress
 import java.nio.charset.Charset
@@ -33,11 +32,10 @@ import java.util.*
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.Part
 
-@Service
 class RequestLogHelperImpl @Autowired constructor(
-    val logProperties: LogProperties,
-    val infoExtractFromTokenService: InfoExtractFromTokenService,
-    val formatService: FormatService
+    private val logProperties: LogProperties,
+    private val infoExtractFromTokenService: InfoExtractFromTokenService,
+    private val formatService: FormatService
 ) : RequestLogHelper {
     @Value("\${spring.profiles.active: unknown}")
     private val profile: String = "unknown"
@@ -111,7 +109,7 @@ class RequestLogHelperImpl @Autowired constructor(
         val buf = request.contentAsByteArray
         if (buf.isNotEmpty()) {
             try {
-                return String(buf, 0, buf.size, Charset.forName(request.characterEncoding))
+                return String(buf, 0, buf.size, Charset.forName("UTF-8"))
             } catch (e: Exception) {
                 logger.error("error in reading request body")
             }

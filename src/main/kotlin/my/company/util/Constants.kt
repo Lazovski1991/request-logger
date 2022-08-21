@@ -24,4 +24,5 @@ object Constants {
     const val RESPONSE_STATUS_MDC: String = "Response_Status"
     const val POD_NAME_MDC: String = "Pod_Name"
     const val RESPONSE_BODY_MDC: String = "Response_Body"
+    const val RESPONSE_MARKER_MDC: String = "Response_Marker"
 }

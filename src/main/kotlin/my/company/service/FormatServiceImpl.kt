@@ -2,9 +2,7 @@ package my.company.service
 
 import my.company.model.LogRequest
 import my.company.model.LogResponse
-import org.springframework.stereotype.Service
 
-@Service
 class FormatServiceImpl : FormatService {
     override fun formatRequest(logRequest: LogRequest): String {
         val stringBuilder = StringBuilder()
@@ -32,6 +30,7 @@ class FormatServiceImpl : FormatService {
         stringBuilder.append("REQUEST-ID: ${logResponse.requestId}\n")
         stringBuilder.append("METHOD: ${logResponse.method}\n")
         stringBuilder.append("STATUS: ${logResponse.status}\n")
+        stringBuilder.append("MARKER: ${logResponse.marker}\n")
         stringBuilder.append("URI: ${logResponse.uri}\n")
         stringBuilder.append("DURATION_REQUEST: ${logResponse.duration}\n")
         stringBuilder.append("TOKEN_INFO: ${logResponse.tokenInfo}\n")

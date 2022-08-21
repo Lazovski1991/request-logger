@@ -7,12 +7,10 @@ import my.company.model.TokenInfo
 import my.company.util.Constants
 import org.slf4j.MDC
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.stereotype.Service
 
-@Service
 class InfoExtractFromTokenServiceImpl @Autowired constructor(
-    val logProperties: LogProperties,
-    val jwtParse: ParseTokenUtilService
+    private val logProperties: LogProperties,
+    private val jwtParse: ParseTokenUtilService
 ) : InfoExtractFromTokenService {
 
     override fun checkOrGetTokenInfo(token: String): String {
@@ -22,11 +20,13 @@ class InfoExtractFromTokenServiceImpl @Autowired constructor(
                     && token != "unknown"
                 ) getInfoFromToken(token, false) else "unknown"
             }
+
             AuthType.KEYCLOAK -> {
                 if (logProperties.auth.fieldNameToken.isNotEmpty()
                     && token != "unknown"
                 ) getInfoFromToken(token, true) else "unknown"
             }
+
             else -> {
                 "unknown";
             }

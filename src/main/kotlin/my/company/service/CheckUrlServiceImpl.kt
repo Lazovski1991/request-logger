@@ -2,12 +2,10 @@ package my.company.service
 
 import my.company.config.LogProperties
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.stereotype.Service
 import javax.annotation.PostConstruct
 
-@Service
 class CheckUrlServiceImpl @Autowired constructor(
-    val logProperties: LogProperties
+    private val logProperties: LogProperties
 ) : CheckUrlService {
     lateinit var urlIncludeNotStar: MutableList<String>
     lateinit var urlIncludeSingleStar: MutableList<String>
