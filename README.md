@@ -32,7 +32,7 @@ allprojects {
 Для gradle:
 ````
 dependencies {
-   implementation 'com.github.Lazovski1991:request-logger:2.1.0'
+   implementation 'com.github.Lazovski1991:request-logger:2.2.0'
 }
 ```` 
 ### Настройка yml
