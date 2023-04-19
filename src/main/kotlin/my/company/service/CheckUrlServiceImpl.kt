@@ -1,8 +1,8 @@
 package my.company.service
 
+import jakarta.annotation.PostConstruct
 import my.company.config.LogProperties
 import org.springframework.beans.factory.annotation.Autowired
-import javax.annotation.PostConstruct
 
 class CheckUrlServiceImpl @Autowired constructor(
     private val logProperties: LogProperties

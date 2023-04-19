@@ -1,5 +1,7 @@
 package my.company.service
 
+import jakarta.servlet.http.HttpServletRequest
+import jakarta.servlet.http.Part
 import my.company.config.LogProperties
 import my.company.model.LogRequest
 import my.company.util.Constants.APPLICATION_NAME
@@ -29,8 +31,6 @@ import org.springframework.web.util.ContentCachingRequestWrapper
 import java.net.InetAddress
 import java.nio.charset.Charset
 import java.util.*
-import javax.servlet.http.HttpServletRequest
-import javax.servlet.http.Part
 
 class RequestLogHelperImpl @Autowired constructor(
     private val logProperties: LogProperties,

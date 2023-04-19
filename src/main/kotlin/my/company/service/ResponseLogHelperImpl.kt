@@ -1,5 +1,6 @@
 package my.company.service
 
+import jakarta.servlet.http.HttpServletResponse
 import my.company.model.LogResponse
 import my.company.util.Constants.DURATION_REQUEST_MDC
 import my.company.util.Constants.METHOD_MDC
@@ -20,7 +21,6 @@ import org.springframework.http.MediaType
 import org.springframework.web.util.ContentCachingRequestWrapper
 import org.springframework.web.util.ContentCachingResponseWrapper
 import java.nio.charset.Charset
-import javax.servlet.http.HttpServletResponse
 
 class ResponseLogHelperImpl @Autowired constructor(
     private val formatService: FormatService

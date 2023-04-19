@@ -1,19 +1,21 @@
 package my.company.filter
 
+import jakarta.servlet.FilterChain
+import jakarta.servlet.http.HttpServletRequest
+import jakarta.servlet.http.HttpServletResponse
 import my.company.config.LogProperties
 import my.company.service.CheckUrlService
 import my.company.service.RequestLogHelper
 import my.company.service.ResponseLogHelper
 import my.company.util.Constants
 import org.slf4j.MDC
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.core.annotation.Order
 import org.springframework.web.filter.OncePerRequestFilter
 import org.springframework.web.util.ContentCachingRequestWrapper
 import org.springframework.web.util.ContentCachingResponseWrapper
-import javax.servlet.FilterChain
-import javax.servlet.http.HttpServletRequest
-import javax.servlet.http.HttpServletResponse
 
-class LogFilter constructor(
+class LogFilter @Autowired constructor(
     private val logProperties: LogProperties,
     private val requestLogHelper: RequestLogHelper,
     private val responseLogHelper: ResponseLogHelper,
