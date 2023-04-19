@@ -1,5 +1,5 @@
 # **Библиотека логирования запросов и ответов**
-Для логирования запросов и ответов можно просто подлючить к проекту и настроить файл yml проекта(необязательно). ЯП котлин, основана на OncePerRequestFilter spring. Версия spring 2.4.8.
+Для логирования запросов и ответов можно просто подлючить к проекту и настроить файл yml проекта(необязательно). ЯП котлин, основана на OncePerRequestFilter spring. Версия 3.0.0 работает на 3 спринг буте и подходит для использования только с ним. последняя рабочая версия для 2 спринг бута 2.3.0
 
 ### Подлючение к проекту
 1. Добавить репозиторий в проект. Пример для maven:
@@ -25,14 +25,14 @@ allprojects {
 <dependency>
 	 <groupId>com.github.Lazovski1991</groupId>
 	 <artifactId>request-logger</artifactId>
-	 <version>2.3.0</version>
+	 <version>3.0.0</version>
 </dependency>
 ````
 
 Для gradle:
 ````
 dependencies {
-   implementation 'com.github.Lazovski1991:request-logger:2.3.0'
+   implementation 'com.github.Lazovski1991:request-logger:3.0.0'
 }
 ```` 
 ### Настройка yml
