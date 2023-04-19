@@ -10,11 +10,10 @@ plugins {
 }
 
 group = "my.company"
-version = "2.3.1"
+version = "3.0.0"
 java.sourceCompatibility = JavaVersion.VERSION_17
 
 repositories {
-    mavenLocal()
     mavenCentral()
     maven(url = "https://jitpack.io")
 }
@@ -24,8 +23,7 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-web")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     kapt("org.springframework.boot:spring-boot-configuration-processor")
-//    api("com.github.Lazovski1991:jwt-parse-lib:2.0.2")
-    api("my.company:jwt-parse-lib:2.0.3")
+    api("com.github.Lazovski1991:jwt-parse-lib:3.0.2")
     implementation("net.logstash.logback:logstash-logback-encoder:7.3")
 }
 
@@ -44,7 +42,7 @@ val jar: Jar by tasks
 val bootJar: BootJar by tasks
 
 bootJar.enabled = false
-jar.enabled = true
+jar.enabled = false
 
 java {
     withSourcesJar()
@@ -54,7 +52,7 @@ publishing {
     publications {
         create<MavenPublication>("maven") {
             from(components["java"])
-            version = "2.3.1"
+            version = "3.0.0"
         }
     }
 }
